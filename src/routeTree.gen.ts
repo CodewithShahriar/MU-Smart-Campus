@@ -10,25 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StudentIndexRouteImport } from './routes/student/index'
 import { Route as FacultyIndexRouteImport } from './routes/faculty/index'
-import { Route as StudentRoutineRouteImport } from './routes/student/routine'
-import { Route as StudentRoomsRouteImport } from './routes/student/rooms'
-import { Route as StudentAnalyticsRouteImport } from './routes/student/analytics'
-import { Route as FacultyRoutineRouteImport } from './routes/faculty/routine'
-import { Route as FacultyManageRouteImport } from './routes/faculty/manage'
-import { Route as FacultyLoginRouteImport } from './routes/faculty/login'
-import { Route as FacultyBookRouteImport } from './routes/faculty/book'
 import { Route as FacultyAnalyticsRouteImport } from './routes/faculty/analytics'
+import { Route as FacultyBookRouteImport } from './routes/faculty/book'
+import { Route as FacultyLoginRouteImport } from './routes/faculty/login'
+import { Route as FacultyManageRouteImport } from './routes/faculty/manage'
+import { Route as FacultyRoutineRouteImport } from './routes/faculty/routine'
+import { Route as StudentIndexRouteImport } from './routes/student/index'
+import { Route as StudentAnalyticsRouteImport } from './routes/student/analytics'
+import { Route as StudentRoomsRouteImport } from './routes/student/rooms'
+import { Route as StudentRoutineRouteImport } from './routes/student/routine'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentIndexRoute = StudentIndexRouteImport.update({
-  id: '/student/',
-  path: '/student/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FacultyIndexRoute = FacultyIndexRouteImport.update({
@@ -36,34 +31,9 @@ const FacultyIndexRoute = FacultyIndexRouteImport.update({
   path: '/faculty/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentRoutineRoute = StudentRoutineRouteImport.update({
-  id: '/student/routine',
-  path: '/student/routine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentRoomsRoute = StudentRoomsRouteImport.update({
-  id: '/student/rooms',
-  path: '/student/rooms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentAnalyticsRoute = StudentAnalyticsRouteImport.update({
-  id: '/student/analytics',
-  path: '/student/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FacultyRoutineRoute = FacultyRoutineRouteImport.update({
-  id: '/faculty/routine',
-  path: '/faculty/routine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FacultyManageRoute = FacultyManageRouteImport.update({
-  id: '/faculty/manage',
-  path: '/faculty/manage',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FacultyLoginRoute = FacultyLoginRouteImport.update({
-  id: '/faculty/login',
-  path: '/faculty/login',
+const FacultyAnalyticsRoute = FacultyAnalyticsRouteImport.update({
+  id: '/faculty/analytics',
+  path: '/faculty/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FacultyBookRoute = FacultyBookRouteImport.update({
@@ -71,9 +41,39 @@ const FacultyBookRoute = FacultyBookRouteImport.update({
   path: '/faculty/book',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FacultyAnalyticsRoute = FacultyAnalyticsRouteImport.update({
-  id: '/faculty/analytics',
-  path: '/faculty/analytics',
+const FacultyLoginRoute = FacultyLoginRouteImport.update({
+  id: '/faculty/login',
+  path: '/faculty/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacultyManageRoute = FacultyManageRouteImport.update({
+  id: '/faculty/manage',
+  path: '/faculty/manage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacultyRoutineRoute = FacultyRoutineRouteImport.update({
+  id: '/faculty/routine',
+  path: '/faculty/routine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentIndexRoute = StudentIndexRouteImport.update({
+  id: '/student/',
+  path: '/student/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentAnalyticsRoute = StudentAnalyticsRouteImport.update({
+  id: '/student/analytics',
+  path: '/student/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentRoomsRoute = StudentRoomsRouteImport.update({
+  id: '/student/rooms',
+  path: '/student/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentRoutineRoute = StudentRoutineRouteImport.update({
+  id: '/student/routine',
+  path: '/student/routine',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -182,13 +182,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/student/': {
-      id: '/student/'
-      path: '/student'
-      fullPath: '/student/'
-      preLoaderRoute: typeof StudentIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/faculty/': {
       id: '/faculty/'
       path: '/faculty'
@@ -196,46 +189,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FacultyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/student/routine': {
-      id: '/student/routine'
-      path: '/student/routine'
-      fullPath: '/student/routine'
-      preLoaderRoute: typeof StudentRoutineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/student/rooms': {
-      id: '/student/rooms'
-      path: '/student/rooms'
-      fullPath: '/student/rooms'
-      preLoaderRoute: typeof StudentRoomsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/student/analytics': {
-      id: '/student/analytics'
-      path: '/student/analytics'
-      fullPath: '/student/analytics'
-      preLoaderRoute: typeof StudentAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faculty/routine': {
-      id: '/faculty/routine'
-      path: '/faculty/routine'
-      fullPath: '/faculty/routine'
-      preLoaderRoute: typeof FacultyRoutineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faculty/manage': {
-      id: '/faculty/manage'
-      path: '/faculty/manage'
-      fullPath: '/faculty/manage'
-      preLoaderRoute: typeof FacultyManageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faculty/login': {
-      id: '/faculty/login'
-      path: '/faculty/login'
-      fullPath: '/faculty/login'
-      preLoaderRoute: typeof FacultyLoginRouteImport
+    '/faculty/analytics': {
+      id: '/faculty/analytics'
+      path: '/faculty/analytics'
+      fullPath: '/faculty/analytics'
+      preLoaderRoute: typeof FacultyAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faculty/book': {
@@ -245,11 +203,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FacultyBookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/faculty/analytics': {
-      id: '/faculty/analytics'
-      path: '/faculty/analytics'
-      fullPath: '/faculty/analytics'
-      preLoaderRoute: typeof FacultyAnalyticsRouteImport
+    '/faculty/login': {
+      id: '/faculty/login'
+      path: '/faculty/login'
+      fullPath: '/faculty/login'
+      preLoaderRoute: typeof FacultyLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faculty/manage': {
+      id: '/faculty/manage'
+      path: '/faculty/manage'
+      fullPath: '/faculty/manage'
+      preLoaderRoute: typeof FacultyManageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faculty/routine': {
+      id: '/faculty/routine'
+      path: '/faculty/routine'
+      fullPath: '/faculty/routine'
+      preLoaderRoute: typeof FacultyRoutineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student/': {
+      id: '/student/'
+      path: '/student'
+      fullPath: '/student/'
+      preLoaderRoute: typeof StudentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student/analytics': {
+      id: '/student/analytics'
+      path: '/student/analytics'
+      fullPath: '/student/analytics'
+      preLoaderRoute: typeof StudentAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student/rooms': {
+      id: '/student/rooms'
+      path: '/student/rooms'
+      fullPath: '/student/rooms'
+      preLoaderRoute: typeof StudentRoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student/routine': {
+      id: '/student/routine'
+      path: '/student/routine'
+      fullPath: '/student/routine'
+      preLoaderRoute: typeof StudentRoutineRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -271,3 +271,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
