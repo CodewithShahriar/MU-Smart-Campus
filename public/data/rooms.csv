@@ -1,0 +1,11 @@
+Room Type,Room Numbers,Capacity,Primary Dept
+Large Classroom (60+),"205, 401, 402, 404, 408, 409, 501, 502, 503, 505, 506, 507, 508, E-2, E-3, E-4, E-5",~60,All depts
+Gallery Room (80–140),"GL-1, GL-2",80–140,Shared (large sections)
+80-capacity Room,509,~80,Shared
+Small Room (30–35),"203, 403, 504",30–35,"EEE, ECO, small sections"
+Small Room (40–45),"E-1, E-6",40–45,"EEE, ENG, small sections"
+CSE Computer Lab (large),"309, 310, 311, 405",Lab,CSE
+CSE Computer Lab (small),307,Lab,CSE
+SWE Computer Lab,301,Lab,SWE
+EEE Circuit Lab (large),109,Lab,EEE
+EEE Circuit Lab (small),108,Lab,EEE
