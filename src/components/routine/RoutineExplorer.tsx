@@ -64,22 +64,23 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
   const perPage = 20;
 
   const opts = useMemo(() => {
-    const uniq = (k: keyof (typeof routine)[number]) =>
-      Array.from(new Set(routine.map((r) => r[k] as string).filter(Boolean))).sort();
+    const uniq = (k: keyof (typeof routine)[number], source: typeof routine) =>
+      Array.from(new Set(source.map((r) => r[k] as string).filter(Boolean))).sort();
     const present = new Set(routine.map((r) => r.department));
     const departments = [
       ...DEPARTMENTS.filter((d) => present.has(d.code)).map((d) => d.code),
       ...[...present].filter((p) => !DEPARTMENTS.some((d) => d.code === p)).sort(),
     ];
+    const departmentScopedRoutine = f.department ? routine.filter((r) => r.department === f.department) : routine;
     return {
       department: departments,
-      batch: uniq("batch"),
-      section: uniq("section"),
-      faculty: uniq("faculty"),
-      course: uniq("course"),
-      room: uniq("room"),
+      batch: uniq("batch", departmentScopedRoutine),
+      section: uniq("section", departmentScopedRoutine),
+      faculty: uniq("faculty", departmentScopedRoutine),
+      course: uniq("course", departmentScopedRoutine),
+      room: uniq("room", departmentScopedRoutine),
     };
-  }, [routine]);
+  }, [routine, f.department]);
 
   const filtered = useMemo(() => {
     let out = routine.filter((r) => {
@@ -126,7 +127,16 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
   const slice = filtered.slice((currPage - 1) * perPage, currPage * perPage);
 
   const setFilter = (k: keyof Filters, v: string) => {
-    setF((prev) => ({ ...prev, [k]: v }));
+    setF((prev) => {
+      if (k === "department") {
+        return {
+          ...prev,
+          department: v,
+          batch: v !== prev.department && prev.batch ? "" : prev.batch,
+        };
+      }
+      return { ...prev, [k]: v };
+    });
     setPage(1);
   };
 
