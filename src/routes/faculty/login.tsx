@@ -83,10 +83,10 @@ function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-5 text-xs text-muted-foreground rounded-lg bg-muted p-3">
+          {/* <div className="mt-5 text-xs text-muted-foreground rounded-lg bg-muted p-3">
             <div className="font-semibold text-foreground mb-1">Demo credentials</div>
             admin@gmail.com · 123456
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
