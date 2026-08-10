@@ -3,8 +3,8 @@ import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
 import { todayName } from "@/lib/data/utils";
-import { ListChecks, CalendarPlus, Trash2, Activity, Clock, MapPin, BookOpen, CalendarDays } from "lucide-react";
-import { toast } from "sonner";
+import { ListChecks, CalendarPlus, Activity, Clock, MapPin, BookOpen, CalendarDays, ArrowRight } from "lucide-react";
+import { Link as RouterLink } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/faculty/")({
   head: () => ({
@@ -19,13 +19,11 @@ export const Route = createFileRoute("/faculty/")({
 function FacultyHome() {
   const routine = useMergedRoutine();
   const edits = useData((s) => s.edits);
-  const bookings = useData((s) => s.bookings);
-  const removeBooking = useData((s) => s.removeBooking);
   const today = todayName();
 
   const todayCount = routine.filter((r) => r.day === today).length;
   const editCount = Object.keys(edits).length;
-  const bookingCount = bookings.length;
+  const liveRoutine = routine.filter((r) => r.day === today).slice(0, 6);
 
   return (
     <FacultyShell>
@@ -40,7 +38,7 @@ function FacultyHome() {
           <Stat icon={BookOpen} label="Total Classes" value={routine.length} />
           <Stat icon={Clock} label={`Today (${today})`} value={todayCount} />
           <Stat icon={Activity} label="Routine Edits" value={editCount} />
-          <Stat icon={MapPin} label="Active Bookings" value={bookingCount} />
+          <Stat icon={MapPin} label="Live Routine" value={todayCount} />
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
@@ -68,42 +66,31 @@ function FacultyHome() {
         </div>
 
         <section>
-          <h2 className="text-lg font-semibold font-display mb-3">Active Bookings</h2>
-          <div className="rounded-2xl border border-border bg-card overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 text-left">Room</th>
-                  <th className="px-4 py-3 text-left">Day</th>
-                  <th className="px-4 py-3 text-left">Time</th>
-                  <th className="px-4 py-3 text-left">Course</th>
-                  <th className="px-4 py-3 text-left">Faculty</th>
-                  <th className="px-4 py-3"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.length === 0 && (
-                  <tr><td colSpan={6} className="text-center text-muted-foreground py-10">No active bookings.</td></tr>
-                )}
-                {bookings.map((b) => (
-                  <tr key={b.id} className="border-t border-border">
-                    <td className="px-4 py-3 font-medium">{b.room}</td>
-                    <td className="px-4 py-3">{b.day}</td>
-                    <td className="px-4 py-3 text-xs font-mono">{b.time}</td>
-                    <td className="px-4 py-3">{b.course}</td>
-                    <td className="px-4 py-3">{b.faculty}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => { removeBooking(b.id); toast.success("Booking released"); }}
-                        className="inline-flex items-center gap-1 text-xs text-destructive hover:underline"
-                      >
-                        <Trash2 className="size-3" /> Release
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold font-display">Live Routine</h2>
+            <RouterLink to="/faculty/routine" className="text-sm text-primary hover:underline inline-flex items-center gap-1">
+              Full routine <ArrowRight className="size-3" />
+            </RouterLink>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {liveRoutine.length === 0 && (
+              <div className="md:col-span-2 rounded-2xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
+                No classes scheduled for {today}.
+              </div>
+            )}
+            {liveRoutine.map((item) => (
+              <div key={item.id} className="rounded-2xl border border-border bg-card p-4 hover:border-primary/40 transition-colors">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{item.department}</span>
+                  <span className="text-xs font-mono text-muted-foreground">{item.time}</span>
+                </div>
+                <div className="font-semibold mt-2">{item.course}</div>
+                <div className="text-sm text-muted-foreground mt-1">{item.batch} · {item.faculty || "TBA"}</div>
+                <div className="text-sm text-muted-foreground mt-2 inline-flex items-center gap-1.5">
+                  <MapPin className="size-3" /> Room {item.room || "—"}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>
