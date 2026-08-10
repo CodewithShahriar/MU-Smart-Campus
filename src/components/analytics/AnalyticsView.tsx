@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { Activity, TrendingUp, Building2, Clock, Flame, Snowflake, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isRecognizedDepartment } from "@/lib/data/utils";
 
 const PALETTE = ["#2563eb", "#0ea5e9", "#1d4ed8", "#38bdf8", "#0891b2", "#60a5fa", "#0369a1", "#7dd3fc"];
 
@@ -57,7 +58,10 @@ export function AnalyticsView() {
       .map(([room, count]) => ({ room, count }));
 
     const deptCount = new Map<string, number>();
-    routine.forEach((r) => deptCount.set(r.department, (deptCount.get(r.department) || 0) + 1));
+    routine.forEach((r) => {
+      if (!isRecognizedDepartment(r.department)) return;
+      deptCount.set(r.department, (deptCount.get(r.department) || 0) + 1);
+    });
     const deptData = [...deptCount.entries()]
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);

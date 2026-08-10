@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { StudentShell } from "@/components/layout/StudentShell";
 import { useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
-import { todayName, currentSlot } from "@/lib/data/utils";
+import { todayName, currentSlot, isRecognizedDepartment } from "@/lib/data/utils";
 import { CalendarClock, DoorOpen, BarChart3, ArrowRight, Users, BookOpen, MapPin } from "lucide-react";
 import { useMemo } from "react";
 
@@ -32,7 +32,7 @@ function Overview() {
 
   const stats = useMemo(() => {
     const todaysClasses = routine.filter((r) => r.day === day);
-    const departments = new Set(routine.map((r) => r.department)).size;
+    const departments = new Set(routine.filter((r) => isRecognizedDepartment(r.department)).map((r) => r.department)).size;
     const courses = new Set(routine.map((r) => r.course)).size;
     const rooms = new Set(routine.map((r) => r.room).filter(Boolean)).size;
     return { total: routine.length, todaysClasses: todaysClasses.length, departments, courses, rooms };

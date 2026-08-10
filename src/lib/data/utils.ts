@@ -1,4 +1,4 @@
-import type { ClassEntry, RoomInfo } from "./types";
+import { DEPARTMENTS, type ClassEntry, type RoomInfo } from "./types";
 
 export function normalizeRoom(raw: string): string {
   if (!raw) return "";
@@ -38,6 +38,11 @@ export function resolveDepartment(deptCsv: string, batch: string, course: string
 /** Derive department code from batch string, e.g. "CSE-58A(47)" -> "CSE" */
 export function deriveDepartment(batch: string, fallback = ""): string {
   return resolveDepartment(fallback, batch, "");
+}
+
+export function isRecognizedDepartment(dept: string): boolean {
+  const normalized = (dept || "").trim().toUpperCase();
+  return DEPARTMENTS.some((candidate) => candidate.code === normalized);
 }
 
 export function deriveSection(batch: string): string {
