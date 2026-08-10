@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
-import { todayName } from "@/lib/data/utils";
+import { currentSlot, todayName } from "@/lib/data/utils";
 import { ListChecks, CalendarPlus, Activity, Clock, MapPin, BookOpen, CalendarDays, ArrowRight } from "lucide-react";
 import { Link as RouterLink } from "@tanstack/react-router";
 
@@ -20,10 +21,25 @@ function FacultyHome() {
   const routine = useMergedRoutine();
   const edits = useData((s) => s.edits);
   const today = todayName();
+  const currentTimeSlot = currentSlot(TIME_SLOTS);
 
   const todayCount = routine.filter((r) => r.day === today).length;
   const editCount = Object.keys(edits).length;
-  const liveRoutine = routine.filter((r) => r.day === today).slice(0, 6);
+  const liveRoutine = useMemo(() => {
+    const todaysClasses = routine.filter((r) => r.day === today);
+    if (!currentTimeSlot) return [];
+
+    const currentIndex = TIME_SLOTS.indexOf(currentTimeSlot as (typeof TIME_SLOTS)[number]);
+    const orderedSlots = [...TIME_SLOTS.slice(currentIndex), ...TIME_SLOTS.slice(0, currentIndex)];
+
+    const grouped: typeof todaysClasses = [];
+    orderedSlots.forEach((slot) => {
+      const slotClasses = todaysClasses.filter((item) => item.time === slot);
+      grouped.push(...slotClasses);
+    });
+
+    return grouped.slice(0, 8);
+  }, [routine, today, currentTimeSlot]);
 
   return (
     <FacultyShell>
@@ -75,7 +91,7 @@ function FacultyHome() {
           <div className="grid gap-3 md:grid-cols-2">
             {liveRoutine.length === 0 && (
               <div className="md:col-span-2 rounded-2xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
-                No classes scheduled for {today}.
+                No classes in the current time slot right now.
               </div>
             )}
             {liveRoutine.map((item) => (
