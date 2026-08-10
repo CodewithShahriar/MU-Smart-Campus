@@ -1,13 +1,13 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
-import { LayoutDashboard, ListChecks, CalendarPlus, LogOut, ShieldCheck, CalendarDays, BarChart3 } from "lucide-react";
+import { LayoutDashboard, ListChecks, CalendarPlus, LogOut, ShieldCheck, CalendarDays, BarChart3, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useData } from "@/lib/data/store";
 import { useInitData } from "@/lib/data/useInit";
 
 const NAV = [
   { to: "/faculty", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/faculty/routine", label: "View Routine", icon: CalendarDays },
+  { to: "/faculty/routine", label: "Central Routine", icon: CalendarDays },
   { to: "/faculty/manage", label: "Manage Routine", icon: ListChecks },
   { to: "/faculty/book", label: "Book Room", icon: CalendarPlus },
   { to: "/faculty/analytics", label: "Analytics", icon: BarChart3 },

@@ -3,7 +3,7 @@ import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
 import { todayName } from "@/lib/data/utils";
-import { ListChecks, CalendarPlus, Trash2, Activity, Clock, MapPin, BookOpen } from "lucide-react";
+import { ListChecks, CalendarPlus, Trash2, Activity, Clock, MapPin, BookOpen, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/faculty/")({
@@ -43,7 +43,14 @@ function FacultyHome() {
           <Stat icon={MapPin} label="Active Bookings" value={bookingCount} />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-3 gap-5">
+          <Link to="/faculty/routine" className="group rounded-2xl border border-border bg-card p-6 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
+            <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
+              <CalendarDays className="size-5 text-primary-foreground" />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold font-display">Central Routine</h3>
+            <p className="text-sm text-muted-foreground mt-1.5">Browse the full central timetable with the same filters students use, side by side with management tools.</p>
+          </Link>
           <Link to="/faculty/manage" className="group rounded-2xl border border-border bg-card p-6 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
             <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
               <ListChecks className="size-5 text-primary-foreground" />
