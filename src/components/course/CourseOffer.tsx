@@ -209,8 +209,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
               <div key={`${group.batch}|${group.section}|${group.semester}`} className="overflow-hidden rounded-3xl border border-slate-200">
                 <div className="flex items-center justify-between gap-4 bg-sky-50 px-5 py-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">Course offering</p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-900">
+                    <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-900">
                       {group.batch ? <span className="rounded-full bg-white px-3 py-1.5 shadow-sm ring-1 ring-sky-100">Batch {group.batch}</span> : null}
                       {group.section ? <span className="px-1 text-sm font-normal text-slate-500">Section {group.section}</span> : null}
                       {group.semester ? <span className="rounded-full bg-sky-600 px-3 py-1.5 text-white shadow-sm">Semester {group.semester.replace(/-+/g, "–")}</span> : null}
@@ -240,7 +239,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                     <div className="font-mono text-sm text-slate-600">{index + 1}</div>
                     <div className="font-mono text-sm font-semibold text-slate-900">{offer.code}</div>
                     <div className="text-sm text-slate-800">{offer.title}</div>
-                    <div className="text-right font-mono text-sm font-medium text-slate-900">{offer.credits || "—"}</div>
+                    <div className="text-right font-mono text-sm font-bold text-sky-700">{offer.credits || "—"}</div>
                   </div>
                 ))}
               </div>

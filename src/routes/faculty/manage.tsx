@@ -109,8 +109,8 @@ function ManagePage() {
               </button>
             )}
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <label className="relative col-span-2">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <label className="relative col-span-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search course, faculty, room, batch…" className="w-full h-10 pl-10 pr-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
             </label>
