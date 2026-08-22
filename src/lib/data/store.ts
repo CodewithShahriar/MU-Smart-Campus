@@ -14,6 +14,7 @@ interface DataState {
   rooms: RoomInfo[];
   edits: Record<string, EditPatch>;
   bookings: Booking[];
+  lastRoutineUpdatedAt: number | null;
   authed: boolean;
   facultyEmail: string | null;
 
@@ -35,6 +36,7 @@ export const useData = create<DataState>()(
       rooms: [],
       edits: {},
       bookings: [],
+      lastRoutineUpdatedAt: null,
       authed: false,
       facultyEmail: null,
 
@@ -66,15 +68,21 @@ export const useData = create<DataState>()(
       },
 
       editEntry: (id, patch) =>
-        set((s) => ({ edits: { ...s.edits, [id]: { ...(s.edits[id] || {}), ...patch } } })),
+        set((s) => ({
+          edits: { ...s.edits, [id]: { ...(s.edits[id] || {}), ...patch } },
+          lastRoutineUpdatedAt: Date.now(),
+        })),
 
       addBooking: (b) => {
         const booking: Booking = { ...b, id: `b-${Date.now()}`, createdAt: Date.now() };
-        set((s) => ({ bookings: [...s.bookings, booking] }));
+        set((s) => ({ bookings: [...s.bookings, booking], lastRoutineUpdatedAt: Date.now() }));
         return booking;
       },
 
-      removeBooking: (id) => set((s) => ({ bookings: s.bookings.filter((x) => x.id !== id) })),
+      removeBooking: (id) => set((s) => ({
+        bookings: s.bookings.filter((x) => x.id !== id),
+        lastRoutineUpdatedAt: Date.now(),
+      })),
 
       login: (email, password) => {
         if (email.trim().toLowerCase() === "admin@gmail.com" && password === "123456") {
@@ -87,7 +95,7 @@ export const useData = create<DataState>()(
     }),
     {
       name: "musy-portal",
-      partialize: (s) => ({ edits: s.edits, bookings: s.bookings, authed: s.authed, facultyEmail: s.facultyEmail }),
+      partialize: (s) => ({ edits: s.edits, bookings: s.bookings, lastRoutineUpdatedAt: s.lastRoutineUpdatedAt, authed: s.authed, facultyEmail: s.facultyEmail }),
     }
   )
 );

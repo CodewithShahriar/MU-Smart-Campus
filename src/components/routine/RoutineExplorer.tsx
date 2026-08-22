@@ -8,7 +8,6 @@ import {
   Calendar as CalendarIcon,
   Filter,
   X,
-  Printer,
   MapPin,
   User,
   ArrowUpDown,
@@ -183,12 +182,6 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary text-primary-foreground px-4 py-2.5 text-sm font-medium shadow-glow hover:opacity-90 transition-opacity"
             >
               <Sparkles className="size-4" /> Today's Routine
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm hover:border-primary/40 transition-colors"
-            >
-              <Printer className="size-4" /> Print
             </button>
           </div>
         </div>

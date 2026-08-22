@@ -4,8 +4,7 @@ import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
 import { currentSlot, todayName } from "@/lib/data/utils";
-import { ListChecks, CalendarPlus, Activity, Clock, MapPin, BookOpen, CalendarDays, ArrowRight } from "lucide-react";
-import { Link as RouterLink } from "@tanstack/react-router";
+import { ListChecks, CalendarPlus, Activity, Clock, DoorOpen, MapPin, CalendarDays } from "lucide-react";
 
 export const Route = createFileRoute("/faculty/")({
   head: () => ({
@@ -19,27 +18,37 @@ export const Route = createFileRoute("/faculty/")({
 
 function FacultyHome() {
   const routine = useMergedRoutine();
-  const edits = useData((s) => s.edits);
+  const lastRoutineUpdatedAt = useData((s) => s.lastRoutineUpdatedAt);
+  const rooms = useData((s) => s.rooms);
+  const bookings = useData((s) => s.bookings);
   const today = todayName();
   const currentTimeSlot = currentSlot(TIME_SLOTS);
 
   const todayCount = routine.filter((r) => r.day === today).length;
-  const editCount = Object.keys(edits).length;
-  const liveRoutine = useMemo(() => {
-    const todaysClasses = routine.filter((r) => r.day === today);
+  const lastUpdated = lastRoutineUpdatedAt
+    ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(lastRoutineUpdatedAt)
+    : "No changes yet";
+  const availableRooms = useMemo(() => {
     if (!currentTimeSlot) return [];
+    const occupiedRooms = new Set(
+      routine
+        .filter((entry) => entry.day === today && entry.time === currentTimeSlot && entry.room)
+        .map((entry) => entry.room),
+    );
+    const uniqueRooms = new Map(rooms.map((room) => [room.number, room]));
+    return [...uniqueRooms.values()].filter((room) => !occupiedRooms.has(room.number));
+  }, [rooms, routine, today, currentTimeSlot]);
 
-    const currentIndex = TIME_SLOTS.indexOf(currentTimeSlot as (typeof TIME_SLOTS)[number]);
-    const orderedSlots = [...TIME_SLOTS.slice(currentIndex), ...TIME_SLOTS.slice(0, currentIndex)];
-
-    const grouped: typeof todaysClasses = [];
-    orderedSlots.forEach((slot) => {
-      const slotClasses = todaysClasses.filter((item) => item.time === slot);
-      grouped.push(...slotClasses);
-    });
-
-    return grouped.slice(0, 8);
-  }, [routine, today, currentTimeSlot]);
+  const todayBookings = bookings.filter((booking) => booking.day === today).length;
+  const liveRoutine = availableRooms.slice(0, 8).map((room) => ({
+    id: room.number,
+    department: "Available room",
+    time: "Available",
+    course: `Room ${room.number}`,
+    batch: room.type,
+    faculty: `Capacity ${room.capacity}`,
+    room: room.number,
+  }));
 
   return (
     <FacultyShell>
@@ -51,10 +60,10 @@ function FacultyHome() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Stat icon={BookOpen} label="Total Classes" value={routine.length} />
+          <Stat icon={DoorOpen} label="Available Rooms Now" value={availableRooms.length} />
           <Stat icon={Clock} label={`Today (${today})`} value={todayCount} />
-          <Stat icon={Activity} label="Routine Edits" value={editCount} />
-          <Stat icon={MapPin} label="Live Routine" value={todayCount} />
+          <Stat icon={Activity} label="Last Updated" value={lastUpdated} />
+          <Stat icon={CalendarPlus} label="Today's Bookings" value={todayBookings} />
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
@@ -83,15 +92,16 @@ function FacultyHome() {
 
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold font-display">Live Routine</h2>
-            <RouterLink to="/faculty/routine" className="text-sm text-primary hover:underline inline-flex items-center gap-1">
-              Full routine <ArrowRight className="size-3" />
-            </RouterLink>
+            <div>
+              <h2 className="text-lg font-semibold font-display">Room Availability</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{currentTimeSlot ? `${today} · ${currentTimeSlot}` : "There is no active time slot right now."}</p>
+            </div>
+            <Link to="/faculty/book" className="text-sm text-primary hover:underline">Manage bookings</Link>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {liveRoutine.length === 0 && (
               <div className="md:col-span-2 rounded-2xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
-                No classes in the current time slot right now.
+                No rooms are available for the current time slot.
               </div>
             )}
             {liveRoutine.map((item) => (
@@ -114,14 +124,14 @@ function FacultyHome() {
   );
 }
 
-function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: number }) {
+function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
         <Icon className="size-4 text-primary" />
       </div>
-      <div className="text-2xl font-semibold font-display mt-1.5">{value}</div>
+      <div className="mt-1.5 text-base font-semibold font-display sm:text-xl">{value}</div>
     </div>
   );
 }
