@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS, DEPT_NAME } from "@/lib/data/types";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Search, Pencil, Save, X, Filter } from "lucide-react";
 import { toast } from "sonner";
 
@@ -86,6 +86,20 @@ function ManagePage() {
   };
 
   const activeCount = [q, dayF, deptF, batchF, sectionF, facultyF, timeF, roomF].filter(Boolean).length;
+  const liveConflicts = useMemo(() => {
+    if (!editing || !draft.day || !draft.time) return { room: undefined, faculty: undefined };
+
+    const sameSlot = routine.filter((entry) => entry.id !== editing && entry.day === draft.day && entry.time === draft.time);
+    const room = draft.room?.trim()
+      ? sameSlot.find((entry) => entry.room?.trim() === draft.room.trim())
+      : undefined;
+    const faculty = draft.faculty?.trim()
+      ? sameSlot.find((entry) => entry.faculty?.trim().toLowerCase() === draft.faculty.trim().toLowerCase())
+      : undefined;
+
+    return { room, faculty };
+  }, [routine, editing, draft]);
+
   const clearAll = () => {
     setQ(""); setDayF(""); setDeptF(""); setBatchF(""); setSectionF(""); setFacultyF(""); setTimeF(""); setRoomF("");
   };
@@ -144,7 +158,8 @@ function ManagePage() {
                 {filtered.map((r) => {
                   const isEdit = editing === r.id;
                   return (
-                    <tr key={r.id} className="border-t border-border">
+                    <Fragment key={r.id}>
+                    <tr className="border-t border-border">
                       {isEdit ? (
                         <>
                           <td className="p-2"><select value={draft.day} onChange={(e) => setDraft({ ...draft, day: e.target.value })} className="h-9 px-2 rounded-md border border-border bg-background text-xs w-full">{DAYS.map((d) => <option key={d}>{d}</option>)}</select></td>
@@ -176,6 +191,18 @@ function ManagePage() {
                         </>
                       )}
                     </tr>
+                    {isEdit && (liveConflicts.room || liveConflicts.faculty) && (
+                      <tr className="border-t border-warning/30 bg-warning/10">
+                        <td colSpan={9} className="px-3 py-2 text-xs text-warning-foreground">
+                          <span className="font-semibold">Conflict warning:</span>{" "}
+                          {liveConflicts.room ? `Room ${draft.room} is already used by ${liveConflicts.room.course} (${liveConflicts.room.batch})` : ""}
+                          {liveConflicts.room && liveConflicts.faculty ? " • " : ""}
+                          {liveConflicts.faculty ? `${draft.faculty} is already assigned to ${liveConflicts.faculty.course} (${liveConflicts.faculty.batch})` : ""}
+                          {" "}at this day and time.
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   );
                 })}
                 {filtered.length === 0 && <tr><td colSpan={9} className="text-center text-muted-foreground py-10 text-sm">No entries match.</td></tr>}
