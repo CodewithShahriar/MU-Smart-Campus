@@ -66,10 +66,15 @@ function ManagePage() {
   };
   const save = () => {
     if (!editing) return;
-    // conflict detection
-    const conflict = routine.find((x) =>
-      x.id !== editing && x.day === draft.day && x.time === draft.time && x.room === draft.room && x.room
+    const sameSlot = routine.filter((entry) => entry.id !== editing && entry.day === draft.day && entry.time === draft.time);
+    const roomConflict = draft.room?.trim() && sameSlot.some((entry) => entry.room?.trim() === draft.room.trim());
+    const facultyConflict = draft.faculty?.trim() && sameSlot.some(
+      (entry) => entry.faculty?.trim().toLowerCase() === draft.faculty.trim().toLowerCase()
     );
+    if (roomConflict || facultyConflict) {
+      toast.error("Resolve the scheduling conflict before saving.");
+      return;
+    }
     editEntry(editing, {
       course: draft.course,
       faculty: draft.faculty,
@@ -80,8 +85,7 @@ function ManagePage() {
       batch: draft.batch,
       section: draft.section,
     });
-    if (conflict) toast.warning(`Saved, but Room ${draft.room} conflicts with ${conflict.course} (${conflict.batch})`);
-    else toast.success("Routine updated — students see it instantly");
+    toast.success("Routine updated — students see it instantly");
     setEditing(null);
   };
 
@@ -171,7 +175,14 @@ function ManagePage() {
                           <td className="p-2"><input value={draft.faculty} onChange={(e) => setDraft({ ...draft, faculty: e.target.value })} className="h-9 px-2 rounded-md border border-border bg-background text-xs w-24" /></td>
                           <td className="p-2"><input value={draft.room} onChange={(e) => setDraft({ ...draft, room: e.target.value })} className="h-9 px-2 rounded-md border border-border bg-background text-xs w-20" /></td>
                           <td className="p-2 whitespace-nowrap">
-                            <button onClick={save} className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-primary text-primary-foreground"><Save className="size-3" /> Save</button>
+                            <button
+                              onClick={save}
+                              disabled={Boolean(liveConflicts.room || liveConflicts.faculty)}
+                              title={liveConflicts.room || liveConflicts.faculty ? "Resolve the conflict before saving" : "Save changes"}
+                              className="inline-flex items-center gap-1 rounded bg-primary px-2 py-1 text-xs text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              <Save className="size-3" /> {liveConflicts.room || liveConflicts.faculty ? "Resolve conflict" : "Save"}
+                            </button>
                             <button onClick={() => setEditing(null)} className="ml-1 inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-border"><X className="size-3" /></button>
                           </td>
                         </>
@@ -187,8 +198,8 @@ function ManagePage() {
                           <td className="px-3 py-2.5 text-xs">{r.batch}</td>
                           <td className="px-3 py-2.5 text-xs">{r.section}</td>
                           <td className="px-3 py-2.5 font-medium">{r.course}</td>
-                          <td className="px-3 py-2.5 text-xs">{r.faculty || "—"}</td>
-                          <td className="px-3 py-2.5 text-xs">{r.room || "—"}</td>
+                          <td className="px-3 py-2.5 text-sm font-medium">{r.faculty || "—"}</td>
+                          <td className="px-3 py-2.5 text-sm font-medium">{r.room || "—"}</td>
                           <td className="px-3 py-2.5 text-right">
                             <button onClick={() => startEdit(r)} className="inline-flex items-center gap-1 text-xs text-primary hover:underline"><Pencil className="size-3" /> Edit</button>
                           </td>
