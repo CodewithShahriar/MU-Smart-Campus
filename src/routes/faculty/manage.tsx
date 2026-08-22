@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS, DEPT_NAME } from "@/lib/data/types";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Search, Pencil, Save, X, Filter } from "lucide-react";
 import { toast } from "sonner";
 
@@ -66,11 +66,6 @@ function ManagePage() {
   };
   const save = () => {
     if (!editing) return;
-    const sameSlot = routine.filter((entry) => entry.id !== editing && entry.day === draft.day && entry.time === draft.time);
-    const roomConflict = draft.room?.trim() && sameSlot.some((entry) => entry.room?.trim() === draft.room.trim());
-    const facultyConflict = draft.faculty?.trim() && sameSlot.some(
-      (entry) => entry.faculty?.trim().toLowerCase() === draft.faculty.trim().toLowerCase()
-    );
     editEntry(editing, {
       course: draft.course,
       faculty: draft.faculty,
@@ -81,8 +76,7 @@ function ManagePage() {
       batch: draft.batch,
       section: draft.section,
     });
-    if (roomConflict || facultyConflict) toast.warning("Saved with a scheduling conflict. It is marked in the table.");
-    else toast.success("Routine updated — students see it instantly");
+    toast.success("Routine updated — students see it instantly");
     setEditing(null);
   };
 
@@ -116,6 +110,21 @@ function ManagePage() {
     });
     return ids;
   }, [routine]);
+
+  useEffect(() => {
+    const toastId = "routine-conflicts";
+    if (conflictIds.size > 0) {
+      toast.error(`${conflictIds.size} routine entr${conflictIds.size === 1 ? "y has" : "ies have"} scheduling conflicts. Resolve them from Manage Routine.`, {
+        id: toastId,
+        duration: Infinity,
+        closeButton: false,
+      });
+    } else {
+      toast.dismiss(toastId);
+    }
+  }, [conflictIds]);
+
+  useEffect(() => () => toast.dismiss("routine-conflicts"), []);
 
   const clearAll = () => {
     setQ(""); setDayF(""); setDeptF(""); setBatchF(""); setSectionF(""); setFacultyF(""); setTimeF(""); setRoomF("");
@@ -213,11 +222,6 @@ function ManagePage() {
                           <td className="px-3 py-2.5 text-sm font-medium">{r.faculty || "—"}</td>
                           <td className="px-3 py-2.5 text-sm font-medium">{r.room || "—"}</td>
                           <td className="px-3 py-2.5 text-right">
-                            {conflictIds.has(r.id) && (
-                              <span className="mr-2 inline-flex rounded-full bg-destructive/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-destructive">
-                                Conflict
-                              </span>
-                            )}
                             <button onClick={() => startEdit(r)} className="inline-flex items-center gap-1 text-xs text-primary hover:underline"><Pencil className="size-3" /> Edit</button>
                           </td>
                         </>
