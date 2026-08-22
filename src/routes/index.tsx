@@ -75,7 +75,7 @@ function Landing() {
           </div>
         </div>
 
-        <footer className="pt-6 border-t border-border/60 text-xs text-muted-foreground flex flex-wrap justify-between gap-2">
+        <footer className="flex flex-col items-center gap-2 border-t border-border/60 pt-6 text-center text-xs text-muted-foreground sm:flex-row sm:justify-between sm:text-left">
           <div>© {new Date().getFullYear()} Metropolitan University, Sylhet</div>
           <div>
             Developed by{" "}
