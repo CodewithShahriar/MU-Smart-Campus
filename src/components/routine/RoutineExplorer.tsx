@@ -12,8 +12,6 @@ import {
   MapPin,
   User,
   ArrowUpDown,
-  LayoutGrid,
-  Rows3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -60,7 +58,6 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState<string>("");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [density, setDensity] = useState<"comfortable" | "compact">("comfortable");
   const perPage = 20;
 
   const opts = useMemo(() => {
@@ -159,7 +156,7 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
   };
 
   const activeChips = (Object.entries(f) as [keyof Filters, string][]).filter(([, v]) => v);
-  const rowPad = density === "compact" ? "py-2" : "py-3.5";
+  const rowPad = "py-3.5";
 
   return (
     <div className="space-y-6">
@@ -186,13 +183,6 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary text-primary-foreground px-4 py-2.5 text-sm font-medium shadow-glow hover:opacity-90 transition-opacity"
             >
               <Sparkles className="size-4" /> Today's Routine
-            </button>
-            <button
-              onClick={() => setDensity(density === "compact" ? "comfortable" : "compact")}
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm hover:border-primary/40 transition-colors"
-            >
-              {density === "compact" ? <LayoutGrid className="size-4" /> : <Rows3 className="size-4" />}
-              {density === "compact" ? "Comfort" : "Compact"}
             </button>
             <button
               onClick={() => window.print()}
@@ -233,8 +223,9 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
             </button>
           )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="space-y-3">
           <SearchBox value={f.q} onChange={(v) => setFilter("q", v)} />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Select
             label="Department"
             value={f.department}
@@ -249,6 +240,7 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
           <Select label="Faculty" value={f.faculty} onChange={(v) => setFilter("faculty", v)} options={opts.faculty} />
           <Select label="Course" value={f.course} onChange={(v) => setFilter("course", v)} options={opts.course} />
           <Select label="Room" value={f.room} onChange={(v) => setFilter("room", v)} options={opts.room} />
+          </div>
         </div>
         {activeChips.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border">
@@ -267,10 +259,19 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-elegant">
+      <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-linear-to-r from-primary/8 via-card to-card px-5 py-4">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">Academic schedule</p>
+            <h2 className="mt-1 font-display text-lg font-semibold">Class routine</h2>
+          </div>
+          <span className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground">
+            {total} scheduled classes
+          </span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted/60 backdrop-blur text-[11px] uppercase tracking-wider text-muted-foreground sticky top-0 z-10">
+            <thead className="sticky top-0 z-10 bg-muted/70 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
               <tr>
                 {[
                   ["day", "Day"],
@@ -302,38 +303,36 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
                 <tr
                   key={r.id}
                   className={cn(
-                    "border-t border-border/70 transition-colors group",
-                    i % 2 === 1 && "bg-muted/20",
-                    "hover:bg-primary/5",
-                    r.isBooking && "bg-warning/10 hover:bg-warning/15"
+                    "group relative z-0 border-t border-border/70 outline-1 -outline-offset-1 outline-transparent transition-[outline-color] hover:z-10 hover:outline-primary/40",
+                    i % 2 === 1 && "bg-slate-100",
+                    r.isBooking && "bg-warning/10 hover:outline-warning/50"
                   )}
                 >
                   <td className={cn("px-4 whitespace-nowrap", rowPad)}>
                     <DayBadge day={r.day} />
                   </td>
                   <td className={cn("px-4 whitespace-nowrap", rowPad)}>
-                    <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground transition-colors">
-                      {r.time}
-                    </span>
+                    <span className="text-xs font-medium text-foreground">{r.time}</span>
                   </td>
                   <td className={cn("px-4", rowPad)}>
                     <DeptBadge dept={r.department} />
                   </td>
-                  <td className={cn("px-4 text-xs", rowPad)}>{r.batch}</td>
+                  <td className={cn("px-4", rowPad)}>
+                    <div className="text-xs font-semibold text-foreground">{r.batch}</div>
+                    {r.section && r.section !== "-" ? <div className="mt-0.5 text-[11px] font-normal text-muted-foreground">Section {r.section}</div> : null}
+                  </td>
                   <td className={cn("px-4 font-medium", rowPad)}>
-                    <div className="flex items-center gap-2">
-                      <span className="h-6 w-1 rounded-full bg-gradient-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                      {r.course}
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-7 w-1 rounded-full bg-gradient-primary opacity-50 transition-opacity group-hover:opacity-100" />
+                      <div>
+                        <div className="font-semibold text-foreground">{r.course}</div>
+                        {r.isBooking ? <span className="mt-1 inline-flex rounded-full bg-warning/20 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-warning-foreground">Booking</span> : null}
+                      </div>
                     </div>
                   </td>
                   <td className={cn("px-4 text-xs", rowPad)}>
                     {r.faculty ? (
-                      <span className="inline-flex items-center gap-1.5">
-                        <span className="size-6 rounded-full bg-secondary text-secondary-foreground grid place-items-center text-[9px] font-semibold">
-                          {r.faculty.slice(0, 2).toUpperCase()}
-                        </span>
-                        {r.faculty}
-                      </span>
+                      <span className="text-xs font-medium text-foreground">{r.faculty}</span>
                     ) : (
                       <span className="text-muted-foreground inline-flex items-center gap-1">
                         <User className="size-3" /> —
@@ -341,7 +340,7 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
                     )}
                   </td>
                   <td className={cn("px-4", rowPad)}>
-                    <div className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-primary/10 text-primary font-semibold">
+                    <div className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
                       <MapPin className="size-3" /> {r.room || "—"}
                     </div>
                   </td>

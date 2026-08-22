@@ -1,9 +1,10 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
 import {
+  BarChart3,
+  BookOpen,
   CalendarDays,
   DoorOpen,
-  BarChart3,
   GraduationCap,
   Home,
   Sparkles,
@@ -14,6 +15,7 @@ import { useInitData } from "@/lib/data/useInit";
 const NAV = [
   { to: "/student", label: "Overview", icon: Home, exact: true },
   { to: "/student/routine", label: "Routine", icon: CalendarDays },
+  { to: "/student/course-offer", label: "Courses", icon: BookOpen },
   { to: "/student/rooms", label: "Rooms", icon: DoorOpen },
   { to: "/student/analytics", label: "Analytics", icon: BarChart3 },
 ];

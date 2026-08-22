@@ -13,11 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as FacultyIndexRouteImport } from './routes/faculty/index'
 import { Route as FacultyAnalyticsRouteImport } from './routes/faculty/analytics'
 import { Route as FacultyBookRouteImport } from './routes/faculty/book'
+import { Route as FacultyCourseOfferRouteImport } from './routes/faculty/course-offer'
 import { Route as FacultyLoginRouteImport } from './routes/faculty/login'
 import { Route as FacultyManageRouteImport } from './routes/faculty/manage'
 import { Route as FacultyRoutineRouteImport } from './routes/faculty/routine'
 import { Route as StudentIndexRouteImport } from './routes/student/index'
 import { Route as StudentAnalyticsRouteImport } from './routes/student/analytics'
+import { Route as StudentCourseOfferRouteImport } from './routes/student/course-offer'
 import { Route as StudentRoomsRouteImport } from './routes/student/rooms'
 import { Route as StudentRoutineRouteImport } from './routes/student/routine'
 
@@ -39,6 +41,11 @@ const FacultyAnalyticsRoute = FacultyAnalyticsRouteImport.update({
 const FacultyBookRoute = FacultyBookRouteImport.update({
   id: '/faculty/book',
   path: '/faculty/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacultyCourseOfferRoute = FacultyCourseOfferRouteImport.update({
+  id: '/faculty/course-offer',
+  path: '/faculty/course-offer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FacultyLoginRoute = FacultyLoginRouteImport.update({
@@ -66,6 +73,11 @@ const StudentAnalyticsRoute = StudentAnalyticsRouteImport.update({
   path: '/student/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentCourseOfferRoute = StudentCourseOfferRouteImport.update({
+  id: '/student/course-offer',
+  path: '/student/course-offer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentRoomsRoute = StudentRoomsRouteImport.update({
   id: '/student/rooms',
   path: '/student/rooms',
@@ -81,10 +93,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/faculty/analytics': typeof FacultyAnalyticsRoute
   '/faculty/book': typeof FacultyBookRoute
+  '/faculty/course-offer': typeof FacultyCourseOfferRoute
   '/faculty/login': typeof FacultyLoginRoute
   '/faculty/manage': typeof FacultyManageRoute
   '/faculty/routine': typeof FacultyRoutineRoute
   '/student/analytics': typeof StudentAnalyticsRoute
+  '/student/course-offer': typeof StudentCourseOfferRoute
   '/student/rooms': typeof StudentRoomsRoute
   '/student/routine': typeof StudentRoutineRoute
   '/faculty/': typeof FacultyIndexRoute
@@ -94,10 +108,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/faculty/analytics': typeof FacultyAnalyticsRoute
   '/faculty/book': typeof FacultyBookRoute
+  '/faculty/course-offer': typeof FacultyCourseOfferRoute
   '/faculty/login': typeof FacultyLoginRoute
   '/faculty/manage': typeof FacultyManageRoute
   '/faculty/routine': typeof FacultyRoutineRoute
   '/student/analytics': typeof StudentAnalyticsRoute
+  '/student/course-offer': typeof StudentCourseOfferRoute
   '/student/rooms': typeof StudentRoomsRoute
   '/student/routine': typeof StudentRoutineRoute
   '/faculty': typeof FacultyIndexRoute
@@ -108,10 +124,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/faculty/analytics': typeof FacultyAnalyticsRoute
   '/faculty/book': typeof FacultyBookRoute
+  '/faculty/course-offer': typeof FacultyCourseOfferRoute
   '/faculty/login': typeof FacultyLoginRoute
   '/faculty/manage': typeof FacultyManageRoute
   '/faculty/routine': typeof FacultyRoutineRoute
   '/student/analytics': typeof StudentAnalyticsRoute
+  '/student/course-offer': typeof StudentCourseOfferRoute
   '/student/rooms': typeof StudentRoomsRoute
   '/student/routine': typeof StudentRoutineRoute
   '/faculty/': typeof FacultyIndexRoute
@@ -123,10 +141,12 @@ export interface FileRouteTypes {
     | '/'
     | '/faculty/analytics'
     | '/faculty/book'
+    | '/faculty/course-offer'
     | '/faculty/login'
     | '/faculty/manage'
     | '/faculty/routine'
     | '/student/analytics'
+    | '/student/course-offer'
     | '/student/rooms'
     | '/student/routine'
     | '/faculty/'
@@ -136,10 +156,12 @@ export interface FileRouteTypes {
     | '/'
     | '/faculty/analytics'
     | '/faculty/book'
+    | '/faculty/course-offer'
     | '/faculty/login'
     | '/faculty/manage'
     | '/faculty/routine'
     | '/student/analytics'
+    | '/student/course-offer'
     | '/student/rooms'
     | '/student/routine'
     | '/faculty'
@@ -149,10 +171,12 @@ export interface FileRouteTypes {
     | '/'
     | '/faculty/analytics'
     | '/faculty/book'
+    | '/faculty/course-offer'
     | '/faculty/login'
     | '/faculty/manage'
     | '/faculty/routine'
     | '/student/analytics'
+    | '/student/course-offer'
     | '/student/rooms'
     | '/student/routine'
     | '/faculty/'
@@ -163,10 +187,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FacultyAnalyticsRoute: typeof FacultyAnalyticsRoute
   FacultyBookRoute: typeof FacultyBookRoute
+  FacultyCourseOfferRoute: typeof FacultyCourseOfferRoute
   FacultyLoginRoute: typeof FacultyLoginRoute
   FacultyManageRoute: typeof FacultyManageRoute
   FacultyRoutineRoute: typeof FacultyRoutineRoute
   StudentAnalyticsRoute: typeof StudentAnalyticsRoute
+  StudentCourseOfferRoute: typeof StudentCourseOfferRoute
   StudentRoomsRoute: typeof StudentRoomsRoute
   StudentRoutineRoute: typeof StudentRoutineRoute
   FacultyIndexRoute: typeof FacultyIndexRoute
@@ -201,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/faculty/book'
       fullPath: '/faculty/book'
       preLoaderRoute: typeof FacultyBookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faculty/course-offer': {
+      id: '/faculty/course-offer'
+      path: '/faculty/course-offer'
+      fullPath: '/faculty/course-offer'
+      preLoaderRoute: typeof FacultyCourseOfferRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faculty/login': {
@@ -238,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/course-offer': {
+      id: '/student/course-offer'
+      path: '/student/course-offer'
+      fullPath: '/student/course-offer'
+      preLoaderRoute: typeof StudentCourseOfferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/student/rooms': {
       id: '/student/rooms'
       path: '/student/rooms'
@@ -259,10 +299,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FacultyAnalyticsRoute: FacultyAnalyticsRoute,
   FacultyBookRoute: FacultyBookRoute,
+  FacultyCourseOfferRoute: FacultyCourseOfferRoute,
   FacultyLoginRoute: FacultyLoginRoute,
   FacultyManageRoute: FacultyManageRoute,
   FacultyRoutineRoute: FacultyRoutineRoute,
   StudentAnalyticsRoute: StudentAnalyticsRoute,
+  StudentCourseOfferRoute: StudentCourseOfferRoute,
   StudentRoomsRoute: StudentRoomsRoute,
   StudentRoutineRoute: StudentRoutineRoute,
   FacultyIndexRoute: FacultyIndexRoute,
