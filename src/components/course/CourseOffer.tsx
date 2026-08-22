@@ -11,7 +11,7 @@ type CourseGroup = { batch: string; semester: string; section: string };
 const emptyCourseRow = (): CourseRow => ({ code: "", title: "", credits: "" });
 
 export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
-  const { offers, loading, importFromCSV, replaceOfferGroup } = useCourseOffers();
+  const { offers, loading, importFromCSV, replaceOfferGroup, removeOfferGroup } = useCourseOffers();
   const [query, setQuery] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedBatch, setSelectedBatch] = useState("All Batches");
@@ -103,6 +103,20 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
     setIsAddingList(false);
   }
 
+  function removeCourseList(group: Pick<CO, "batch" | "section" | "semester">) {
+    const label = [group.batch && `Batch ${group.batch}`, group.section && `Section ${group.section}`, group.semester && `Semester ${group.semester}`].filter(Boolean).join(", ");
+    if (window.confirm(`Remove the course offer for ${label || "this group"}?`)) {
+      removeOfferGroup(group);
+    }
+  }
+
+  function clearFilters() {
+    setQuery("");
+    setSelectedBatch("All Batches");
+    setSelectedSemester("All");
+    setSelectedSection("All Sections");
+  }
+
   function onFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -187,8 +201,9 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button variant="outline" onClick={clearFilters}>Clear filters</Button>
           {isFaculty ? (
-            <Button onClick={startAddingList} className="rounded-full px-5 py-3"><Plus className="mr-2 h-4 w-4" />Add Batch Course List</Button>
+            <Button onClick={startAddingList} className="rounded-full px-5 py-3"><Plus className="mr-2 h-4 w-4" />Add New Semester Course Offer</Button>
           ) : null}
         </div>
       </section>
@@ -197,7 +212,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
         <section className="rounded-3xl border border-slate-200/80 bg-slate-50 p-6 shadow-sm">
           <div className="mb-5">
             <h2 className="text-lg font-semibold text-slate-900">Add batch course list</h2>
-            <p className="mt-1 text-sm text-slate-600">Save করলে এই Batch, Semester ও Section-এর আগের পুরো list নতুন list দিয়ে replace হবে।</p>
+            <p className="mt-1 text-sm text-slate-600">Saving replaces the complete existing list for this batch, semester, and section.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             <Input placeholder="Batch (e.g. 67)" value={groupForm.batch} onChange={(e) => setGroupForm({ ...groupForm, batch: e.target.value })} />
@@ -250,6 +265,11 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                     <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-100">
                       Total {group.offers.reduce((sum, offer) => sum + (Number.parseFloat(offer.credits || "0") || 0), 0).toFixed(1)} credits
                     </span>
+                    {isFaculty ? (
+                      <Button variant="ghost" size="sm" className="h-8 text-rose-600 hover:bg-rose-50 hover:text-rose-700" onClick={() => removeCourseList(group)}>
+                        <Trash2 className="mr-1 h-3.5 w-3.5" />Remove offer
+                      </Button>
+                    ) : null}
                   </div>
                 </div>
                 <div className={`grid ${tableColumns} gap-0 bg-slate-100 px-4 py-3 text-xs uppercase tracking-[0.2em] text-slate-500`}>
@@ -275,8 +295,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
                 <div>{shownCount} course{shownCount === 1 ? "" : "s"} displayed</div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setQuery("")}>Clear search</Button>
-                  <Button variant="outline" onClick={() => setSelectedSemester("All")}>All semesters</Button>
+                  <Button variant="outline" onClick={clearFilters}>Clear filters</Button>
                 </div>
               </div>
             )}

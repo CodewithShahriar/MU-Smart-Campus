@@ -14,9 +14,22 @@ export type CourseOffer = {
 };
 
 const LOCAL_KEY = "course_offers_local_v1";
+const REMOVED_GROUPS_KEY = "course_offers_removed_groups_v1";
 
 function groupKey(offer: Pick<CourseOffer, "batch" | "section" | "semester">) {
   return [offer.batch, offer.section, offer.semester].map((value) => value?.trim() || "").join("|");
+}
+
+function getRemovedGroups() {
+  try {
+    return new Set<string>(JSON.parse(localStorage.getItem(REMOVED_GROUPS_KEY) || "[]"));
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function saveRemovedGroups(groups: Set<string>) {
+  localStorage.setItem(REMOVED_GROUPS_KEY, JSON.stringify([...groups]));
 }
 
 function parseCSV(text: string): CourseOffer[] {
@@ -106,7 +119,8 @@ export function useCourseOffers() {
         const local = localStorage.getItem(LOCAL_KEY);
         const localArr: CourseOffer[] = local ? JSON.parse(local) : [];
         const localGroups = new Set(localArr.map(groupKey));
-        const merged = [...localArr, ...parsed.filter((offer) => !localGroups.has(groupKey(offer)))];
+        const removedGroups = getRemovedGroups();
+        const merged = [...localArr, ...parsed.filter((offer) => !localGroups.has(groupKey(offer)) && !removedGroups.has(groupKey(offer)))];
         if (mounted) setOffers(merged);
       } catch (err) {
         // fallback to local only
@@ -151,7 +165,18 @@ export function useCourseOffers() {
       section: group.section?.trim() || "",
       semester: group.semester?.trim() || "",
     }));
+    const removedGroups = getRemovedGroups();
+    removedGroups.delete(key);
+    saveRemovedGroups(removedGroups);
     persistLocal([...replacement, ...offers.filter((offer) => groupKey(offer) !== key)]);
+  }
+
+  function removeOfferGroup(group: Pick<CourseOffer, "batch" | "section" | "semester">) {
+    const key = groupKey(group);
+    const removedGroups = getRemovedGroups();
+    removedGroups.add(key);
+    saveRemovedGroups(removedGroups);
+    persistLocal(offers.filter((offer) => groupKey(offer) !== key));
   }
 
   function removeOffer(id: string) {
@@ -166,5 +191,5 @@ export function useCourseOffers() {
     persistLocal(next);
   }
 
-  return { offers, loading, addOffer, updateOffer, removeOffer, importFromCSV, replaceOfferGroup };
+  return { offers, loading, addOffer, updateOffer, removeOffer, importFromCSV, replaceOfferGroup, removeOfferGroup };
 }
