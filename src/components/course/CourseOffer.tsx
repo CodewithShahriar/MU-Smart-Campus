@@ -3,7 +3,7 @@ import { useCourseOffers, CourseOffer as CO } from "@/lib/data/courseOffers";
 import { sortBatchesCseFirst } from "@/lib/data/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Printer, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 type CourseRow = Pick<CO, "code" | "title" | "credits">;
 type CourseGroup = { batch: string; semester: string; section: string };
@@ -11,7 +11,7 @@ type CourseGroup = { batch: string; semester: string; section: string };
 const emptyCourseRow = (): CourseRow => ({ code: "", title: "", credits: "" });
 
 export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
-  const { offers, loading, importFromCSV, replaceOfferGroup, removeOfferGroup } = useCourseOffers();
+  const { offers, loading, replaceOfferGroup, removeOfferGroup } = useCourseOffers();
   const [query, setQuery] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedBatch, setSelectedBatch] = useState("All Batches");
@@ -117,17 +117,6 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
     setSelectedSection("All Sections");
   }
 
-  function onFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = String(reader.result || "");
-      importFromCSV(text);
-    };
-    reader.readAsText(file);
-  }
-
   return (
     <div className="space-y-6">
       <section className="rounded-4xl border border-slate-200/80 bg-linear-to-r from-slate-50 via-sky-50 to-white p-8 shadow-lg">
@@ -140,17 +129,6 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="outline" className="rounded-full px-5 py-3" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" /> Print
-            </Button>
-            {isFaculty && (
-              <label className="cursor-pointer">
-                <input onChange={onFile} accept=".csv" type="file" className="hidden" />
-                <Button variant="outline" className="rounded-full px-5 py-3"><Plus className="mr-2 h-4 w-4" />Import CSV</Button>
-              </label>
-            )}
-          </div>
         </div>
       </section>
 
