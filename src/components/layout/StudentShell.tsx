@@ -33,8 +33,8 @@ export function StudentShell({ children }: { children: ReactNode }) {
               <GraduationCap className="size-5 text-primary-foreground" />
             </div>
             <div className="leading-tight">
-              <div className="text-sm font-semibold font-display">MUS Portal</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Student · Sylhet</div>
+              <div className="text-sm font-semibold font-display">Student Portal</div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground"></div>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
@@ -61,7 +61,7 @@ export function StudentShell({ children }: { children: ReactNode }) {
             to="/faculty/login"
             className="text-xs px-3 py-1.5 rounded-lg border border-border hover:border-primary/50 hover:text-primary transition-colors flex items-center gap-1.5"
           >
-            <Sparkles className="size-3.5" />
+            
             Faculty
           </Link>
         </div>
@@ -101,7 +101,12 @@ export function StudentShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-border/60 mt-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-xs text-muted-foreground flex flex-wrap justify-between gap-2">
           <div>Metropolitan University, Sylhet · Smart Routine & Room Management</div>
-          <div>Data source · Central Routine CSV</div>
+          <div>
+            Developed by{" "}
+            <a href="https://github.com/CodewithShahriar" target="_blank" rel="noreferrer" className="font-medium text-primary transition-colors hover:text-primary/80 hover:underline">
+              Code with Shahriar
+            </a>
+          </div>
         </div>
       </footer>
     </div>

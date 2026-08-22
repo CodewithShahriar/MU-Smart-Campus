@@ -38,7 +38,7 @@ export function FacultyShell({ children }: { children: ReactNode }) {
             </div>
             <div className="leading-tight">
               <div className="text-sm font-semibold font-display">Faculty Console</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">MU Sylhet</div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground"></div>
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
