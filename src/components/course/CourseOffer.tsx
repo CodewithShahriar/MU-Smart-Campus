@@ -129,12 +129,13 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
       </section>
 
       <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm">
-        <div className="grid gap-4 xl:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="space-y-4">
           <Input
             placeholder="Search course code or name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+          <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label className="mb-2 block text-xs font-medium uppercase tracking-[0.2em] text-slate-500">Batch</label>
             <select
@@ -170,6 +171,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                 <option key={section} value={section}>{section}</option>
               ))}
             </select>
+          </div>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
