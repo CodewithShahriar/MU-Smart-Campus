@@ -192,22 +192,22 @@ function ManagePage() {
                       )}
                     </tr>
                     {isEdit && (liveConflicts.room || liveConflicts.faculty) && (
-                      <tr className="border-t border-warning/30 bg-warning/10">
+                      <tr className="border-t border-destructive/25 bg-destructive/5">
                         <td colSpan={9} className="px-3 py-2">
-                          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-warning/40 bg-background/70 px-3 py-2 text-xs text-warning-foreground shadow-sm">
-                            <AlertTriangle className="size-4 shrink-0 text-warning" />
+                          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-destructive/30 bg-background/80 px-3 py-2 text-xs text-destructive shadow-sm">
+                            <AlertTriangle className="size-4 shrink-0" />
                             <span className="font-semibold">Scheduling conflict</span>
                             {liveConflicts.room && (
-                              <span className="rounded-full bg-warning/15 px-2 py-1">
+                              <span className="rounded-full bg-destructive/10 px-2 py-1">
                                 Room <strong>{draft.room}</strong> is used by <strong>{liveConflicts.room.course}</strong> ({liveConflicts.room.batch})
                               </span>
                             )}
                             {liveConflicts.faculty && (
-                              <span className="rounded-full bg-warning/15 px-2 py-1">
+                              <span className="rounded-full bg-destructive/10 px-2 py-1">
                                 <strong>{draft.faculty}</strong> is assigned to <strong>{liveConflicts.faculty.course}</strong> ({liveConflicts.faculty.batch})
                               </span>
                             )}
-                            <span className="text-warning-foreground/70">at this day and time</span>
+                            <span className="text-destructive/70">at this day and time</span>
                           </div>
                         </td>
                       </tr>
