@@ -3,7 +3,7 @@ import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS } from "@/lib/data/types";
 import { useMemo, useState } from "react";
-import { CalendarPlus, CheckCircle2, XCircle, DoorOpen } from "lucide-react";
+import { CalendarPlus, CheckCircle2, XCircle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,7 @@ function BookPage() {
   const rooms = useData((s) => s.rooms);
   const bookings = useData((s) => s.bookings);
   const addBooking = useData((s) => s.addBooking);
+  const removeBooking = useData((s) => s.removeBooking);
   const routine = useMergedRoutine();
 
   const [day, setDay] = useState<string>(DAYS[0]);
@@ -46,6 +47,7 @@ function BookPage() {
   const available = availability.filter((r) => r.status === "available");
   const visible = status === "all" ? availability : availability.filter((r) => r.status === status);
   const selectedRoom = availability.find((r) => r.number === room);
+  const selectedBookings = bookings.filter((booking) => booking.day === day && booking.time === slot);
 
   const submit = () => {
     if (!course || !faculty || !room) return toast.error("Fill in all fields");
@@ -54,6 +56,12 @@ function BookPage() {
     addBooking({ day, time: slot, room, course, faculty });
     toast.success(`Room ${room} reserved for ${day} · ${slot}`);
     setCourse(""); setFaculty(""); setRoom("");
+  };
+
+  const cancelBooking = (id: string, roomNumber: string) => {
+    if (!window.confirm(`Remove the reservation for room ${roomNumber}?`)) return;
+    removeBooking(id);
+    toast.success(`Room ${roomNumber} reservation removed`);
   };
 
   return (
@@ -153,6 +161,41 @@ function BookPage() {
             </div>
           </div>
         </div>
+
+        <section className="rounded-2xl border border-border bg-card p-5 shadow-elegant">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 className="text-sm font-semibold font-display">Current reservations</h2>
+              <p className="mt-1 text-xs text-muted-foreground">{day} · {slot}</p>
+            </div>
+            <span className="rounded-full bg-warning/15 px-3 py-1 text-xs font-medium text-warning-foreground">{selectedBookings.length} booked</span>
+          </div>
+          {selectedBookings.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">No rooms are reserved for this day and time slot.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[520px] text-sm">
+                <thead className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <tr><th className="pb-3 font-medium">Room</th><th className="pb-3 font-medium">Course</th><th className="pb-3 font-medium">Faculty</th><th className="pb-3 text-right font-medium">Action</th></tr>
+                </thead>
+                <tbody>
+                  {selectedBookings.map((booking) => (
+                    <tr key={booking.id} className="border-b border-border/60 last:border-0">
+                      <td className="py-3 font-semibold">{booking.room}</td>
+                      <td className="py-3 text-muted-foreground">{booking.course}</td>
+                      <td className="py-3 text-muted-foreground">{booking.faculty}</td>
+                      <td className="py-3 text-right">
+                        <button onClick={() => cancelBooking(booking.id, booking.room)} className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10">
+                          <Trash2 className="size-3.5" /> Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </div>
     </FacultyShell>
   );

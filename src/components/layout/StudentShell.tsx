@@ -101,14 +101,10 @@ export function StudentShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-border/60 mt-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-xs text-muted-foreground flex flex-wrap justify-between gap-2">
           <div>Metropolitan University, Sylhet · Smart Routine & Room Management</div>
-          <div>
-            Developed by{" "}
-            <a href="https://github.com/CodewithShahriar" target="_blank" rel="noreferrer" className="font-medium text-primary transition-colors hover:text-primary/80 hover:underline">
-              Code with Shahriar
-            </a>
-          </div>
+          <div>Developed by Code with Shahriar</div>
         </div>
       </footer>
     </div>
   );
 }
+
