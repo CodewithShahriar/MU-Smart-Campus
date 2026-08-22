@@ -30,7 +30,10 @@ function Landing() {
               <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Sylhet · Smart Routine</div>
             </div>
           </div>
-          <div className="text-xs text-muted-foreground hidden sm:block">v1.0 · Central Routine Portal</div>
+          <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
+            <span className="size-1.5 rounded-full bg-success" />
+            Last updated · 23 August 2026
+          </div>
         </header>
 
         <div className="flex-1 grid lg:grid-cols-2 items-center gap-12 py-12">
