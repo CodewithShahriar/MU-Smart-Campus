@@ -178,7 +178,11 @@ function ManagePage() {
                       ) : (
                         <>
                           <td className="px-3 py-2.5">{r.day}</td>
-                          <td className="px-3 py-2.5 text-xs font-mono whitespace-nowrap">{r.time}</td>
+                          <td className="px-3 py-2.5 whitespace-nowrap">
+                            <span className="inline-flex rounded-md bg-muted px-2.5 py-1 text-sm font-semibold text-foreground">
+                              {r.time}
+                            </span>
+                          </td>
                           <td className="px-3 py-2.5"><span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary">{r.department}</span></td>
                           <td className="px-3 py-2.5 text-xs">{r.batch}</td>
                           <td className="px-3 py-2.5 text-xs">{r.section}</td>
