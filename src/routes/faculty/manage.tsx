@@ -29,6 +29,7 @@ function ManagePage() {
   const [roomF, setRoomF] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<any>({});
+  const [savedConflictIds, setSavedConflictIds] = useState<Set<string>>(() => new Set());
 
   const opts = useMemo(() => {
     const uniq = (k: "department" | "batch" | "section" | "faculty" | "room") =>
@@ -66,6 +67,17 @@ function ManagePage() {
   };
   const save = () => {
     if (!editing) return;
+    const sameSlot = routine.filter((entry) => entry.id !== editing && entry.day === draft.day && entry.time === draft.time);
+    const hasConflict = sameSlot.some((entry) =>
+      (draft.room?.trim() && entry.room?.trim() === draft.room.trim()) ||
+      (draft.faculty?.trim() && entry.faculty?.trim().toLowerCase() === draft.faculty.trim().toLowerCase())
+    );
+    setSavedConflictIds((previous) => {
+      const next = new Set(previous);
+      if (hasConflict) next.add(editing);
+      else next.delete(editing);
+      return next;
+    });
     editEntry(editing, {
       course: draft.course,
       faculty: draft.faculty,
@@ -111,10 +123,15 @@ function ManagePage() {
     return ids;
   }, [routine]);
 
+  const activeSavedConflictIds = useMemo(
+    () => new Set([...savedConflictIds].filter((id) => conflictIds.has(id))),
+    [savedConflictIds, conflictIds]
+  );
+
   useEffect(() => {
     const toastId = "routine-conflicts";
-    if (conflictIds.size > 0) {
-      toast.error(`${conflictIds.size} routine entr${conflictIds.size === 1 ? "y has" : "ies have"} scheduling conflicts. Resolve them from Manage Routine.`, {
+    if (activeSavedConflictIds.size > 0) {
+      toast.error(`${activeSavedConflictIds.size} saved routine entr${activeSavedConflictIds.size === 1 ? "y has" : "ies have"} a scheduling conflict. Resolve it from Manage Routine.`, {
         id: toastId,
         duration: Infinity,
         closeButton: false,
@@ -122,7 +139,7 @@ function ManagePage() {
     } else {
       toast.dismiss(toastId);
     }
-  }, [conflictIds]);
+  }, [activeSavedConflictIds]);
 
   useEffect(() => () => toast.dismiss("routine-conflicts"), []);
 
