@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GraduationCap, ShieldCheck, ArrowRight, CalendarClock, DoorOpen, BarChart3 } from "lucide-react";
+import { GraduationCap, ShieldCheck, ArrowRight, CalendarClock, DoorOpen } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,7 +49,6 @@ function Landing() {
             <div className="flex flex-wrap gap-4 pt-2">
               <Feature icon={CalendarClock} label="Central Routine" />
               <Feature icon={DoorOpen} label="Live Room Status" />
-              <Feature icon={BarChart3} label="Utilization Analytics" />
             </div>
           </div>
 
@@ -66,7 +65,7 @@ function Landing() {
               to="/faculty/login"
               icon={ShieldCheck}
               title="Continue as Faculty"
-              blurb="Sign in to update the routine, reserve rooms and review utilization analytics."
+              blurb="Sign in to update the routine and reserve rooms."
               cta="Faculty Sign In"
               accent="from-sky-500 to-primary"
             />
@@ -75,7 +74,17 @@ function Landing() {
 
         <footer className="pt-6 border-t border-border/60 text-xs text-muted-foreground flex flex-wrap justify-between gap-2">
           <div>© {new Date().getFullYear()} Metropolitan University, Sylhet</div>
-          <div>Built for a real production-grade routine experience</div>
+          <div>
+            Developed by{" "}
+            <a
+              href="https://github.com/CodewithShahriar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary transition-colors hover:text-primary/80 hover:underline"
+            >
+              Code with Shahriar
+            </a>
+          </div>
         </footer>
       </div>
     </div>
