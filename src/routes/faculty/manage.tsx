@@ -71,10 +71,6 @@ function ManagePage() {
     const facultyConflict = draft.faculty?.trim() && sameSlot.some(
       (entry) => entry.faculty?.trim().toLowerCase() === draft.faculty.trim().toLowerCase()
     );
-    if (roomConflict || facultyConflict) {
-      toast.error("Resolve the scheduling conflict before saving.");
-      return;
-    }
     editEntry(editing, {
       course: draft.course,
       faculty: draft.faculty,
@@ -85,7 +81,8 @@ function ManagePage() {
       batch: draft.batch,
       section: draft.section,
     });
-    toast.success("Routine updated — students see it instantly");
+    if (roomConflict || facultyConflict) toast.warning("Saved with a scheduling conflict. It is marked in the table.");
+    else toast.success("Routine updated — students see it instantly");
     setEditing(null);
   };
 
@@ -103,6 +100,22 @@ function ManagePage() {
 
     return { room, faculty };
   }, [routine, editing, draft]);
+
+  const conflictIds = useMemo(() => {
+    const ids = new Set<string>();
+    routine.forEach((entry, index) => {
+      routine.slice(index + 1).forEach((other) => {
+        const sameSlot = entry.day === other.day && entry.time === other.time;
+        const sameRoom = Boolean(entry.room?.trim() && entry.room.trim() === other.room?.trim());
+        const sameFaculty = Boolean(entry.faculty?.trim() && entry.faculty.trim().toLowerCase() === other.faculty?.trim().toLowerCase());
+        if (sameSlot && (sameRoom || sameFaculty)) {
+          ids.add(entry.id);
+          ids.add(other.id);
+        }
+      });
+    });
+    return ids;
+  }, [routine]);
 
   const clearAll = () => {
     setQ(""); setDayF(""); setDeptF(""); setBatchF(""); setSectionF(""); setFacultyF(""); setTimeF(""); setRoomF("");
@@ -177,11 +190,10 @@ function ManagePage() {
                           <td className="p-2 whitespace-nowrap">
                             <button
                               onClick={save}
-                              disabled={Boolean(liveConflicts.room || liveConflicts.faculty)}
-                              title={liveConflicts.room || liveConflicts.faculty ? "Resolve the conflict before saving" : "Save changes"}
-                              className="inline-flex items-center gap-1 rounded bg-primary px-2 py-1 text-xs text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                              title={liveConflicts.room || liveConflicts.faculty ? "Save with this conflict" : "Save changes"}
+                              className="inline-flex items-center gap-1 rounded bg-primary px-2 py-1 text-xs text-primary-foreground"
                             >
-                              <Save className="size-3" /> {liveConflicts.room || liveConflicts.faculty ? "Resolve conflict" : "Save"}
+                              <Save className="size-3" /> Save
                             </button>
                             <button onClick={() => setEditing(null)} className="ml-1 inline-flex items-center gap-1 text-xs px-2 py-1 rounded border border-border"><X className="size-3" /></button>
                           </td>
@@ -201,6 +213,11 @@ function ManagePage() {
                           <td className="px-3 py-2.5 text-sm font-medium">{r.faculty || "—"}</td>
                           <td className="px-3 py-2.5 text-sm font-medium">{r.room || "—"}</td>
                           <td className="px-3 py-2.5 text-right">
+                            {conflictIds.has(r.id) && (
+                              <span className="mr-2 inline-flex rounded-full bg-destructive/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-destructive">
+                                Conflict
+                              </span>
+                            )}
                             <button onClick={() => startEdit(r)} className="inline-flex items-center gap-1 text-xs text-primary hover:underline"><Pencil className="size-3" /> Edit</button>
                           </td>
                         </>
