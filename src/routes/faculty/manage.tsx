@@ -128,18 +128,41 @@ function ManagePage() {
     [savedConflictIds, conflictIds]
   );
 
+  const activeSavedConflictDetails = useMemo(() => {
+    return [...activeSavedConflictIds].flatMap((id) => {
+      const entry = routine.find((item) => item.id === id);
+      if (!entry) return [];
+
+      const conflictingEntry = routine.find((other) => {
+        if (other.id === entry.id || other.day !== entry.day || other.time !== entry.time) return false;
+        const sameRoom = Boolean(entry.room?.trim() && entry.room.trim() === other.room?.trim());
+        const sameFaculty = Boolean(entry.faculty?.trim() && entry.faculty.trim().toLowerCase() === other.faculty?.trim().toLowerCase());
+        return sameRoom || sameFaculty;
+      });
+      if (!conflictingEntry) return [];
+
+      const causes = [
+        entry.room?.trim() && entry.room.trim() === conflictingEntry.room?.trim() ? `Room ${entry.room}` : "",
+        entry.faculty?.trim() && entry.faculty.trim().toLowerCase() === conflictingEntry.faculty?.trim().toLowerCase() ? `Faculty ${entry.faculty}` : "",
+      ].filter(Boolean).join(" and ");
+
+      return [`${entry.course} (${entry.batch}) conflicts with ${conflictingEntry.course} (${conflictingEntry.batch}) via ${causes} on ${entry.day}, ${entry.time}.`];
+    });
+  }, [routine, activeSavedConflictIds]);
+
   useEffect(() => {
     const toastId = "routine-conflicts";
-    if (activeSavedConflictIds.size > 0) {
-      toast.error(`${activeSavedConflictIds.size} saved routine entr${activeSavedConflictIds.size === 1 ? "y has" : "ies have"} a scheduling conflict. Resolve it from Manage Routine.`, {
+    if (activeSavedConflictDetails.length > 0) {
+      toast.error("Scheduling conflict needs attention", {
         id: toastId,
+        description: activeSavedConflictDetails.join(" "),
         duration: Infinity,
         closeButton: false,
       });
     } else {
       toast.dismiss(toastId);
     }
-  }, [activeSavedConflictIds]);
+  }, [activeSavedConflictDetails]);
 
   useEffect(() => () => toast.dismiss("routine-conflicts"), []);
 
