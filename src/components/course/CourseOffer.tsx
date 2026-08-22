@@ -1,5 +1,6 @@
 ﻿import React, { useMemo, useState } from "react";
 import { useCourseOffers, CourseOffer as CO } from "@/lib/data/courseOffers";
+import { sortBatchesCseFirst } from "@/lib/data/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Printer } from "lucide-react";
@@ -26,7 +27,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
     visibleOffers.forEach((offer) => {
       if (offer.batch?.trim()) values.add(offer.batch.trim());
     });
-    return ["All Batches", ...Array.from(values)];
+    return ["All Batches", ...sortBatchesCseFirst(Array.from(values))];
   }, [visibleOffers]);
 
   const sections = useMemo(() => {

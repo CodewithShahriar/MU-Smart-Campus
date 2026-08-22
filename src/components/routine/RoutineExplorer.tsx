@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS, DEPARTMENTS, DEPT_NAME } from "@/lib/data/types";
-import { todayName, slotStartMin } from "@/lib/data/utils";
+import { sortBatchesCseFirst, todayName, slotStartMin } from "@/lib/data/utils";
 import {
   Search,
   Sparkles,
@@ -71,7 +71,7 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
     const departmentScopedRoutine = f.department ? routine.filter((r) => r.department === f.department) : routine;
     return {
       department: departments,
-      batch: uniq("batch", departmentScopedRoutine),
+      batch: sortBatchesCseFirst(uniq("batch", departmentScopedRoutine)),
       section: uniq("section", departmentScopedRoutine),
       faculty: uniq("faculty", departmentScopedRoutine),
       course: uniq("course", departmentScopedRoutine),

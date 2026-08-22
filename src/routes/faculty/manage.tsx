@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
 import { DAYS, TIME_SLOTS, DEPT_NAME } from "@/lib/data/types";
+import { sortBatchesCseFirst } from "@/lib/data/utils";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Search, Pencil, Save, X, Filter } from "lucide-react";
 import { toast } from "sonner";
@@ -36,7 +37,7 @@ function ManagePage() {
       Array.from(new Set(routine.filter((r) => !r.isBooking).map((r) => r[k]).filter(Boolean))).sort();
     return {
       department: uniq("department"),
-      batch: uniq("batch"),
+      batch: sortBatchesCseFirst(uniq("batch")),
       section: uniq("section"),
       faculty: uniq("faculty"),
       room: uniq("room"),

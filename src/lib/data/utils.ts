@@ -8,6 +8,16 @@ export function normalizeRoom(raw: string): string {
   return r;
 }
 
+/** Sort batch labels with CSE batches before all other departments. */
+export function sortBatchesCseFirst(batches: string[]): string[] {
+  return [...batches].sort((first, second) => {
+    const firstIsCse = /^CSE(?:\b|-)/i.test(first.trim());
+    const secondIsCse = /^CSE(?:\b|-)/i.test(second.trim());
+    if (firstIsCse !== secondIsCse) return firstIsCse ? -1 : 1;
+    return first.localeCompare(second, undefined, { numeric: true, sensitivity: "base" });
+  });
+}
+
 /** Canonical department resolution across the messy CSV inputs. */
 export function resolveDepartment(deptCsv: string, batch: string, course: string): string {
   const b = (batch || "").trim().toUpperCase();
