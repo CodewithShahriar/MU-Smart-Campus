@@ -15,6 +15,10 @@ export type CourseOffer = {
 
 const LOCAL_KEY = "course_offers_local_v1";
 
+function groupKey(offer: Pick<CourseOffer, "batch" | "section" | "semester">) {
+  return [offer.batch, offer.section, offer.semester].map((value) => value?.trim() || "").join("|");
+}
+
 function parseCSV(text: string): CourseOffer[] {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   if (lines.length === 0) return [];
@@ -101,7 +105,8 @@ export function useCourseOffers() {
         const parsed = parseCSV(txt);
         const local = localStorage.getItem(LOCAL_KEY);
         const localArr: CourseOffer[] = local ? JSON.parse(local) : [];
-        const merged = [...localArr, ...parsed];
+        const localGroups = new Set(localArr.map(groupKey));
+        const merged = [...localArr, ...parsed.filter((offer) => !localGroups.has(groupKey(offer)))];
         if (mounted) setOffers(merged);
       } catch (err) {
         // fallback to local only
@@ -122,13 +127,31 @@ export function useCourseOffers() {
   }
 
   function addOffer(o: Partial<CourseOffer>) {
-    const next = [{ id: `user-${Date.now()}`, code: o.code || "", title: o.title || "", dept: o.dept || "", credits: o.credits || "", semester: o.semester || "", instructor: o.instructor || "", note: o.note || "" }, ...offers];
+    const next = [{ id: `user-${Date.now()}`, code: o.code || "", title: o.title || "", dept: o.dept || "", credits: o.credits || "", semester: o.semester || "", instructor: o.instructor || "", batch: o.batch || "", section: o.section || "", note: o.note || "" }, ...offers];
     persistLocal(next);
   }
 
   function updateOffer(id: string, patch: Partial<CourseOffer>) {
     const next = offers.map((o) => (o.id === id ? { ...o, ...patch } : o));
     persistLocal(next);
+  }
+
+  function replaceOfferGroup(
+    group: Pick<CourseOffer, "batch" | "section" | "semester">,
+    courses: Array<Pick<CourseOffer, "code" | "title" | "credits">>,
+  ) {
+    const key = groupKey(group);
+    const createdAt = Date.now();
+    const replacement = courses.map((course, index) => ({
+      id: `group-${createdAt}-${index}`,
+      code: course.code.trim(),
+      title: course.title.trim(),
+      credits: course.credits.trim(),
+      batch: group.batch?.trim() || "",
+      section: group.section?.trim() || "",
+      semester: group.semester?.trim() || "",
+    }));
+    persistLocal([...replacement, ...offers.filter((offer) => groupKey(offer) !== key)]);
   }
 
   function removeOffer(id: string) {
@@ -143,5 +166,5 @@ export function useCourseOffers() {
     persistLocal(next);
   }
 
-  return { offers, loading, addOffer, updateOffer, removeOffer, importFromCSV };
+  return { offers, loading, addOffer, updateOffer, removeOffer, importFromCSV, replaceOfferGroup };
 }

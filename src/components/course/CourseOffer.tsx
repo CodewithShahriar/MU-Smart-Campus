@@ -3,23 +3,29 @@ import { useCourseOffers, CourseOffer as CO } from "@/lib/data/courseOffers";
 import { sortBatchesCseFirst } from "@/lib/data/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Printer } from "lucide-react";
+import { Plus, Printer, Trash2 } from "lucide-react";
+
+type CourseRow = Pick<CO, "code" | "title" | "credits">;
+type CourseGroup = { batch: string; semester: string; section: string };
+
+const emptyCourseRow = (): CourseRow => ({ code: "", title: "", credits: "" });
 
 export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
-  const { offers, loading, addOffer, updateOffer, importFromCSV } = useCourseOffers();
+  const { offers, loading, importFromCSV, replaceOfferGroup } = useCourseOffers();
   const [query, setQuery] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedBatch, setSelectedBatch] = useState("All Batches");
   const [selectedSection, setSelectedSection] = useState("All Sections");
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<Partial<CO>>({});
+  const [isAddingList, setIsAddingList] = useState(false);
+  const [groupForm, setGroupForm] = useState<CourseGroup>({ batch: "", semester: "", section: "" });
+  const [courseRows, setCourseRows] = useState<CourseRow[]>([emptyCourseRow()]);
 
   const visibleOffers = useMemo(
     () => offers.filter((offer) => {
       const batchNumber = Number.parseInt(offer.batch?.trim() || "", 10);
       return !Number.isInteger(batchNumber) || batchNumber < 33 || batchNumber > 36;
     }),
-    [offers]
+    [offers],
   );
 
   const batches = useMemo(() => {
@@ -79,17 +85,22 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
   }, [filtered]);
 
   const shownCount = filtered.length;
+  const tableColumns = "grid-cols-[3rem_1fr_2fr_5rem]";
 
-  function startEdit(offer?: CO) {
-    setEditingId(offer?.id ?? null);
-    setForm(offer ? { ...offer } : { code: "", title: "" });
+  function startAddingList() {
+    setGroupForm({ batch: selectedBatch === "All Batches" ? "" : selectedBatch, semester: selectedSemester === "All" ? "" : selectedSemester, section: selectedSection === "All Sections" ? "" : selectedSection });
+    setCourseRows([emptyCourseRow()]);
+    setIsAddingList(true);
   }
 
-  function save() {
-    if (!editingId) addOffer(form);
-    else updateOffer(editingId, form);
-    setEditingId(null);
-    setForm({});
+  function saveCourseList() {
+    const validCourses = courseRows.filter((course) => course.code.trim() || course.title.trim() || course.credits.trim());
+    if (!groupForm.batch.trim() || !groupForm.semester.trim() || validCourses.length === 0 || validCourses.some((course) => !course.code.trim() || !course.title.trim() || !course.credits.trim())) return;
+    replaceOfferGroup(groupForm, validCourses);
+    setSelectedBatch(groupForm.batch.trim());
+    setSelectedSemester(groupForm.semester.trim());
+    setSelectedSection(groupForm.section.trim() || "All Sections");
+    setIsAddingList(false);
   }
 
   function onFile(event: React.ChangeEvent<HTMLInputElement>) {
@@ -177,24 +188,39 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           {isFaculty ? (
-            <Button onClick={() => startEdit()} className="rounded-full px-5 py-3">+ Add Course</Button>
+            <Button onClick={startAddingList} className="rounded-full px-5 py-3"><Plus className="mr-2 h-4 w-4" />Add Batch Course List</Button>
           ) : null}
         </div>
       </section>
 
-      {editingId !== null || form.code ? (
+      {isAddingList ? (
         <section className="rounded-3xl border border-slate-200/80 bg-slate-50 p-6 shadow-sm">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Input placeholder="Course Code" value={form.code || ""} onChange={(e) => setForm({ ...form, code: e.target.value })} />
-            <Input placeholder="Title" value={form.title || ""} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            <Input placeholder="Instructor" value={form.instructor || ""} onChange={(e) => setForm({ ...form, instructor: e.target.value })} />
-            <Input placeholder="Dept" value={form.dept || ""} onChange={(e) => setForm({ ...form, dept: e.target.value })} />
-            <Input placeholder="Credits" value={form.credits || ""} onChange={(e) => setForm({ ...form, credits: e.target.value })} />
-            <Input placeholder="Semester" value={form.semester || ""} onChange={(e) => setForm({ ...form, semester: e.target.value })} />
+          <div className="mb-5">
+            <h2 className="text-lg font-semibold text-slate-900">Add batch course list</h2>
+            <p className="mt-1 text-sm text-slate-600">Save করলে এই Batch, Semester ও Section-এর আগের পুরো list নতুন list দিয়ে replace হবে।</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <Input placeholder="Batch (e.g. 67)" value={groupForm.batch} onChange={(e) => setGroupForm({ ...groupForm, batch: e.target.value })} />
+            <Input placeholder="Semester (e.g. 1--1)" value={groupForm.semester} onChange={(e) => setGroupForm({ ...groupForm, semester: e.target.value })} />
+            <Input placeholder="Section (optional)" value={groupForm.section} onChange={(e) => setGroupForm({ ...groupForm, section: e.target.value })} />
+          </div>
+          <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            <div className="grid grid-cols-[1fr_2fr_7rem_2.5rem] gap-3 bg-slate-100 px-4 py-3 text-xs font-medium uppercase tracking-[0.15em] text-slate-500">
+              <span>Course code</span><span>Course name</span><span>Credit</span><span />
+            </div>
+            {courseRows.map((course, index) => (
+              <div key={index} className="grid grid-cols-[1fr_2fr_7rem_2.5rem] gap-3 border-t border-slate-200 p-3">
+                <Input placeholder="CSE 101" value={course.code} onChange={(e) => setCourseRows(courseRows.map((row, rowIndex) => rowIndex === index ? { ...row, code: e.target.value } : row))} />
+                <Input placeholder="Course name" value={course.title} onChange={(e) => setCourseRows(courseRows.map((row, rowIndex) => rowIndex === index ? { ...row, title: e.target.value } : row))} />
+                <Input placeholder="3" value={course.credits} onChange={(e) => setCourseRows(courseRows.map((row, rowIndex) => rowIndex === index ? { ...row, credits: e.target.value } : row))} />
+                <Button aria-label="Remove course" variant="ghost" size="icon" disabled={courseRows.length === 1} onClick={() => setCourseRows(courseRows.filter((_, rowIndex) => rowIndex !== index))}><Trash2 className="h-4 w-4" /></Button>
+              </div>
+            ))}
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Button onClick={save}>Save Course</Button>
-            <Button variant="ghost" onClick={() => { setEditingId(null); setForm({}); }}>Cancel</Button>
+            <Button variant="outline" onClick={() => setCourseRows([...courseRows, emptyCourseRow()])}><Plus className="mr-2 h-4 w-4" />Add another course</Button>
+            <Button onClick={saveCourseList}>Save entire list</Button>
+            <Button variant="ghost" onClick={() => setIsAddingList(false)}>Cancel</Button>
           </div>
         </section>
       ) : null}
@@ -226,7 +252,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                     </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-[3rem_1fr_2fr_5rem] gap-0 bg-slate-100 px-4 py-3 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <div className={`grid ${tableColumns} gap-0 bg-slate-100 px-4 py-3 text-xs uppercase tracking-[0.2em] text-slate-500`}>
                   <div>SL</div>
                   <div>Course Code</div>
                   <div>Course Name</div>
@@ -235,7 +261,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                 {group.offers.map((offer, index) => (
                   <div
                     key={offer.id}
-                    className={`grid grid-cols-[3rem_1fr_2fr_5rem] gap-0 border-t border-slate-200 px-4 py-3.5 ${index % 2 === 0 ? "bg-white" : "bg-slate-50"}`}
+                    className={`grid ${tableColumns} gap-0 border-t border-slate-200 px-4 py-3.5 ${index % 2 === 0 ? "bg-white" : "bg-slate-50"}`}
                   >
                     <div className="font-mono text-sm text-slate-600">{index + 1}</div>
                     <div className="font-mono text-sm font-semibold text-slate-900">{offer.code}</div>
