@@ -93,16 +93,16 @@ export function AnalyticsView() {
   }, [rooms, routine]);
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 sm:space-y-7">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card shadow-elegant">
         <div className="absolute inset-0 bg-mesh opacity-70 pointer-events-none" />
-        <div className="relative p-6 sm:p-8">
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Insights</div>
-          <h1 className="text-3xl sm:text-4xl font-bold font-display mt-1">
+        <div className="relative p-5 sm:p-8">
+          <div className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-muted-foreground">Insights</div>
+          <h1 className="text-2xl sm:text-4xl font-bold font-display mt-1">
             <span className="text-gradient">Room Utilization Analytics</span>
           </h1>
-          <p className="text-muted-foreground text-sm mt-2 max-w-xl">
+          <p className="text-muted-foreground text-xs sm:text-sm mt-1.5 sm:mt-2 max-w-xl">
             Live, data-driven view of {stats.totalClasses.toLocaleString()} scheduled classes across{" "}
             {stats.totalRooms} rooms, {DAYS.length} days and {TIME_SLOTS.length} time slots.
           </p>
@@ -330,8 +330,8 @@ function Highlight({
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
           <Icon className="size-4 text-primary" /> {label}
         </div>
-        <div className="text-4xl font-bold font-display text-gradient mt-2">{value}</div>
-        <p className="text-sm text-muted-foreground mt-2">{text}</p>
+        <div className="text-2xl sm:text-4xl font-bold font-display text-gradient mt-2">{value}</div>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 sm:mt-2">{text}</p>
       </div>
     </SpotlightCard>
   );
@@ -351,14 +351,14 @@ function KPI({
   progress?: number;
 }) {
   return (
-    <SpotlightCard className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
-        <span className="size-8 rounded-xl bg-primary/10 grid place-items-center transition-transform duration-300 group-hover:scale-110">
-          <Icon className="size-4 text-primary" />
+    <SpotlightCard className="p-3.5 sm:p-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-[10px] uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{label}</div>
+        <span className="size-7 sm:size-8 rounded-xl bg-primary/10 grid place-items-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+          <Icon className="size-3.5 sm:size-4 text-primary" />
         </span>
       </div>
-      <div className="text-2xl font-semibold font-display mt-2">
+      <div className="text-xl sm:text-2xl font-semibold font-display mt-1.5 sm:mt-2">
         {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
       </div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}

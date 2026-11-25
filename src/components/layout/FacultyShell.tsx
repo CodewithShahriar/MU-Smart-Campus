@@ -42,7 +42,7 @@ export function FacultyShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background bg-mesh flex flex-col">
       <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-background/75 supports-[backdrop-filter]:bg-background/65">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
           <Link to="/faculty" className="flex items-center gap-2.5 group">
             <div className="size-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105">
               <ShieldCheck className="size-5 text-primary-foreground" />
@@ -92,8 +92,9 @@ export function FacultyShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="lg:hidden border-t border-border/60 overflow-x-auto">
-          <div className="flex gap-1 px-2 py-2">
+        {/* mobile/tablet nav — wrapped grid with no horizontal scrollbar */}
+        <div className="lg:hidden border-t border-border/60 px-2 py-1.5">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1">
             {NAV.map((n) => {
               const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
               return (
@@ -101,14 +102,14 @@ export function FacultyShell({ children }: { children: ReactNode }) {
                   key={n.to}
                   to={n.to}
                   className={cn(
-                    "px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap flex items-center gap-1.5 transition-all",
+                    "px-2 py-1.5 rounded-xl text-[11px] font-medium flex items-center justify-center gap-1 transition-all truncate",
                     active
                       ? "bg-gradient-primary text-primary-foreground shadow-glow"
-                      : "text-muted-foreground hover:text-foreground",
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
                   )}
                 >
-                  <n.icon className="size-3.5" />
-                  {n.label}
+                  <n.icon className="size-3.5 shrink-0" />
+                  <span className="truncate">{n.label}</span>
                 </Link>
               );
             })}
@@ -116,7 +117,7 @@ export function FacultyShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
         {loading && <PortalSkeleton />}
         {error && (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">

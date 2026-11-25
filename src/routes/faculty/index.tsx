@@ -53,12 +53,12 @@ function FacultyHome() {
 
   return (
     <FacultyShell>
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Console</div>
-            <h1 className="text-3xl font-bold font-display">Faculty Dashboard</h1>
-            <p className="text-muted-foreground text-sm mt-1">Manage routine, reserve classrooms and monitor changes.</p>
+            <div className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">Console</div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-display">Faculty Dashboard</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1">Manage routine, reserve classrooms and monitor changes.</p>
           </div>
           <LivePill tone={currentTimeSlot ? "success" : "primary"}>
             <span>{currentTimeSlot ? `${today} · ${currentTimeSlot}` : `${today} · Off-hours`}</span>
@@ -143,12 +143,12 @@ function FacultyHome() {
 function QuickCard({ to, icon: Icon, title, desc }: { to: string; icon: any; title: string; desc: string }) {
   return (
     <Link to={to} className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-      <SpotlightCard className="p-6 h-full">
-        <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-          <Icon className="size-5 text-primary-foreground" />
+      <SpotlightCard className="p-4 sm:p-6 h-full">
+        <div className="size-9 sm:size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+          <Icon className="size-4 sm:size-5 text-primary-foreground" />
         </div>
-        <h3 className="mt-4 text-lg font-semibold font-display">{title}</h3>
-        <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{desc}</p>
+        <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold font-display">{title}</h3>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-1.5 leading-relaxed">{desc}</p>
       </SpotlightCard>
     </Link>
   );
@@ -156,14 +156,14 @@ function QuickCard({ to, icon: Icon, title, desc }: { to: string; icon: any; tit
 
 function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) {
   return (
-    <SpotlightCard className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
-        <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-          <Icon className="size-4" />
+    <SpotlightCard className="p-3.5 sm:p-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{label}</div>
+        <div className="size-7 sm:size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <Icon className="size-3.5 sm:size-4" />
         </div>
       </div>
-      <div className="mt-2 text-base font-semibold font-display sm:text-xl">
+      <div className="mt-1.5 sm:mt-2 text-lg sm:text-xl font-semibold font-display">
         {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
       </div>
     </SpotlightCard>

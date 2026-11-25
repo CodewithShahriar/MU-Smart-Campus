@@ -98,7 +98,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
   }, [filtered]);
 
   const shownCount = filtered.length;
-  const tableColumns = "grid-cols-[3rem_1fr_2fr_5rem]";
+  const tableColumns = "grid-cols-[2rem_5.25rem_1fr_3.5rem] sm:grid-cols-[3rem_1fr_2fr_5rem]";
 
   function startAddingList() {
     setGroupForm({
@@ -147,21 +147,21 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-elegant">
+    <div className="space-y-5 sm:space-y-6">
+      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card p-5 sm:p-8 shadow-elegant">
         <div className="absolute inset-0 bg-mesh opacity-60 pointer-events-none" />
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="relative flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Academic offering</p>
-            <h1 className="mt-2 text-3xl sm:text-4xl font-bold font-display tracking-tight">Course Offer List</h1>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-primary">Academic offering</p>
+            <h1 className="mt-1.5 sm:mt-2 text-2xl sm:text-4xl font-bold font-display tracking-tight">Course Offer List</h1>
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-5 sm:leading-6 text-muted-foreground">
               Explore course offerings loaded from CSV. Use the filters below to find the right batch and semesters.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-border bg-card/90 backdrop-blur-sm p-6 shadow-elegant">
+      <section className="rounded-2xl sm:rounded-3xl border border-border bg-card/90 backdrop-blur-sm p-4 sm:p-6 shadow-elegant">
         <div className="space-y-4">
           <Input placeholder="Search course code or name..." value={query} onChange={(e) => setQuery(e.target.value)} />
           <div className="grid gap-4 md:grid-cols-3">
@@ -314,7 +314,7 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
         </section>
       ) : null}
 
-      <section className="rounded-3xl border border-border bg-card/90 p-6 shadow-elegant">
+      <section className="rounded-2xl sm:rounded-3xl border border-border bg-card/90 p-3.5 sm:p-6 shadow-elegant">
         {loading ? (
           <div className="text-sm text-muted-foreground animate-pulse">Loading…</div>
         ) : shownCount === 0 ? (
@@ -371,24 +371,24 @@ export function CourseOffer({ isFaculty = false }: { isFaculty?: boolean }) {
                   </div>
                 </div>
                 <div
-                  className={`grid ${tableColumns} gap-0 bg-muted/60 px-4 py-3 text-xs uppercase tracking-[0.2em] text-muted-foreground`}
+                  className={`grid ${tableColumns} gap-2 bg-muted/60 px-3 sm:px-4 py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.2em] text-muted-foreground`}
                 >
                   <div>SL</div>
-                  <div>Course Code</div>
+                  <div>Code</div>
                   <div>Course Name</div>
                   <div className="text-right">Credit</div>
                 </div>
                 {group.offers.map((offer, index) => (
                   <div
                     key={offer.id}
-                    className={`grid ${tableColumns} gap-0 border-t border-border px-4 py-3.5 transition-colors hover:bg-primary/5 ${
+                    className={`grid ${tableColumns} items-center gap-2 border-t border-border px-3 sm:px-4 py-2.5 sm:py-3.5 transition-colors hover:bg-primary/5 ${
                       index % 2 === 0 ? "bg-card" : "bg-muted/20"
                     }`}
                   >
-                    <div className="font-mono text-sm text-muted-foreground">{index + 1}</div>
-                    <div className="font-mono text-sm font-semibold">{offer.code}</div>
-                    <div className="text-sm">{offer.title}</div>
-                    <div className="text-right font-mono text-sm font-bold text-primary">{offer.credits || "—"}</div>
+                    <div className="font-mono text-xs sm:text-sm text-muted-foreground">{index + 1}</div>
+                    <div className="font-mono text-xs sm:text-sm font-semibold truncate">{offer.code}</div>
+                    <div className="text-xs sm:text-sm leading-snug">{offer.title}</div>
+                    <div className="text-right font-mono text-xs sm:text-sm font-bold text-primary">{offer.credits || "—"}</div>
                   </div>
                 ))}
               </div>

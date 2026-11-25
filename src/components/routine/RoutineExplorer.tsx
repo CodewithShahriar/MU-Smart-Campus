@@ -160,15 +160,15 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card shadow-elegant">
         <div className="absolute inset-0 bg-mesh opacity-60 pointer-events-none" />
-        <div className="relative p-6 sm:p-7 flex flex-wrap items-end justify-between gap-4">
+        <div className="relative p-4 sm:p-7 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Timetable</div>
-            <h1 className="text-3xl sm:text-4xl font-bold font-display mt-1">
+            <div className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-muted-foreground">Timetable</div>
+            <h1 className="text-2xl sm:text-4xl font-bold font-display mt-1">
               <span className="text-gradient">Central Routine</span>
             </h1>
-            <p className="text-muted-foreground text-sm mt-2">
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1.5 sm:mt-2">
               {subtitle ? subtitle + " · " : ""}
               {total.toLocaleString()} classes ·{" "}
               {activeChips.length > 0
@@ -252,17 +252,53 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-linear-to-r from-primary/8 via-card to-card px-5 py-4">
+      <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card shadow-elegant">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-linear-to-r from-primary/8 via-card to-card px-4 sm:px-5 py-3.5 sm:py-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">Academic schedule</p>
-            <h2 className="mt-1 font-display text-lg font-semibold">Class routine</h2>
+            <h2 className="mt-0.5 sm:mt-1 font-display text-base sm:text-lg font-semibold">Class routine</h2>
           </div>
-          <span className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground">
+          <span className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             {total} scheduled classes
           </span>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile card list */}
+        <div className="md:hidden divide-y divide-border/70">
+          {slice.map((r) => (
+            <div
+              key={r.id}
+              className={cn(
+                "p-3.5 space-y-2 transition-colors",
+                r.isBooking && "bg-warning/10",
+              )}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <DayBadge day={r.day} />
+                  <DeptBadge dept={r.department} />
+                </div>
+                <span className="text-[11px] font-mono font-medium text-muted-foreground">{r.time}</span>
+              </div>
+              <div className="font-semibold text-sm leading-snug">{r.course}</div>
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center gap-1">
+                    <User className="size-3 text-primary" /> {r.faculty || "TBA"}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="size-3 text-primary" /> Room {r.room || "—"}
+                  </span>
+                </div>
+                <span className="text-[11px] font-medium text-foreground">
+                  {r.batch}{r.section && r.section !== "-" ? ` · Sec ${r.section}` : ""}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="sticky top-0 z-10 bg-muted/70 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
               <tr>
@@ -297,7 +333,7 @@ export function RoutineExplorer({ subtitle }: { subtitle?: string }) {
                   key={r.id}
                   className={cn(
                     "group relative z-0 border-t border-border/70 outline-1 -outline-offset-1 outline-transparent transition-[outline-color] hover:z-10 hover:outline-primary/40",
-                    i % 2 === 1 && "bg-slate-100",
+                    i % 2 === 1 && "bg-muted/35",
                     r.isBooking && "bg-warning/10 hover:outline-warning/50"
                   )}
                 >

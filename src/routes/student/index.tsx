@@ -45,14 +45,14 @@ function Overview() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <section className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">Welcome</div>
-          <h1 className="text-3xl sm:text-4xl font-bold font-display mt-1">
+          <div className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">Welcome</div>
+          <h1 className="text-2xl sm:text-4xl font-bold font-display mt-1">
             Good {greet()}, <span className="text-gradient">student.</span>
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-xs sm:text-base text-muted-foreground mt-1.5 sm:mt-2">
             Today is <span className="text-foreground font-medium">{day}</span>
             {isWeekend && <span className="text-warning"> · No scheduled classes</span>}
             {slot && (
@@ -169,14 +169,14 @@ function StatCard({
   delay?: number;
 }) {
   return (
-    <SpotlightCard className="p-4 animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
-      <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
-        <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-          <Icon className="size-4" />
+    <SpotlightCard className="p-3.5 sm:p-4 animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{label}</div>
+        <div className="size-7 sm:size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+          <Icon className="size-3.5 sm:size-4" />
         </div>
       </div>
-      <div className="text-2xl font-semibold font-display mt-2">
+      <div className="text-xl sm:text-2xl font-semibold font-display mt-1.5 sm:mt-2">
         <AnimatedNumber value={value} />
       </div>
     </SpotlightCard>
@@ -200,16 +200,16 @@ function ActionCard({
 }) {
   return (
     <Link to={to} className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-      <SpotlightCard className="p-6 h-full animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
+      <SpotlightCard className="p-4 sm:p-6 h-full animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
         <div className="absolute -top-16 -right-16 size-40 rounded-full bg-primary/10 blur-2xl group-hover:bg-primary/20 transition-colors duration-300" />
         <div className="relative">
-          <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-            <Icon className="size-5 text-primary-foreground" />
+          <div className="size-9 sm:size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+            <Icon className="size-4 sm:size-5 text-primary-foreground" />
           </div>
-          <h3 className="mt-4 text-lg font-semibold font-display">{title}</h3>
-          <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{desc}</p>
-          <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:gap-2.5 transition-all duration-300">
-            {cta} <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+          <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold font-display">{title}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-1.5 leading-relaxed">{desc}</p>
+          <div className="mt-3 sm:mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-primary group-hover:gap-2.5 transition-all duration-300">
+            {cta} <ArrowRight className="size-3.5 sm:size-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </div>
       </SpotlightCard>

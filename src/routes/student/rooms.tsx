@@ -111,10 +111,10 @@ function RoomsPage() {
       <div className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Live Status</div>
-            <h1 className="text-3xl font-bold font-display">Room Availability</h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              {day} · {slot} · <span className="text-success font-medium">{counts.available} available</span> / {counts.total} total · Click any room for its full day schedule
+            <div className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">Live Status</div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-display">Room Availability</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+              {day} · {slot} · <span className="text-success font-medium">{counts.available} available</span> / {counts.total} total · Tap any room for schedule
             </p>
           </div>
         </div>
@@ -190,7 +190,7 @@ function RoomsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {filtered.map((r, idx) => (
             <RoomCard key={r.number} room={r} index={idx} onSelect={() => setSelectedRoom(r)} />
           ))}
@@ -309,24 +309,24 @@ function RoomCard({ room, index, onSelect }: { room: any; index: number; onSelec
       onClick={onSelect}
       style={{ animationDelay: `${Math.min(index, 18) * 25}ms` }}
       className={cn(
-        "text-left group relative overflow-hidden rounded-2xl border bg-card/90 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant animate-fade-up focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+        "text-left group relative overflow-hidden rounded-2xl border bg-card/90 p-3 sm:p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant animate-fade-up focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         styles.ring,
       )}
     >
       <div className={cn("absolute top-0 right-0 h-1 w-full", styles.bg)} />
-      <div className="flex items-center justify-between gap-1">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className={cn("size-9 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105", styles.bg, styles.text)}>
-            <DoorOpen className="size-4" />
+      <div className="flex items-start justify-between gap-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <div className={cn("size-7 sm:size-9 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105", styles.bg, styles.text)}>
+            <DoorOpen className="size-3.5 sm:size-4" />
           </div>
           <div className="min-w-0">
-            <div className="font-semibold font-display leading-tight truncate">{room.number}</div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground truncate">{room.primaryDept}</div>
+            <div className="text-sm sm:text-base font-semibold font-display leading-tight truncate">{room.number}</div>
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{room.primaryDept}</div>
           </div>
         </div>
-        <div className={cn("inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md shrink-0", styles.bg, styles.text)}>
+        <div className={cn("inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded-md shrink-0", styles.bg, styles.text)}>
           {status === "available" && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
-          <S className="size-3" /> {styles.label}
+          <S className="size-2.5 sm:size-3 hidden sm:inline" /> {styles.label}
         </div>
       </div>
 
