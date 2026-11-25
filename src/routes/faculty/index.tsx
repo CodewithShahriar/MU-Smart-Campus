@@ -2,9 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { FacultyShell } from "@/components/layout/FacultyShell";
 import { useData, useMergedRoutine } from "@/lib/data/store";
-import { DAYS, TIME_SLOTS } from "@/lib/data/types";
+import { TIME_SLOTS } from "@/lib/data/types";
 import { currentSlot, todayName } from "@/lib/data/utils";
-import { ListChecks, CalendarPlus, Activity, Clock, DoorOpen, MapPin, CalendarDays } from "lucide-react";
+import { ListChecks, CalendarPlus, Activity, Clock, DoorOpen, MapPin, CalendarDays, ArrowRight } from "lucide-react";
+import { AnimatedNumber, LivePill, SpotlightCard } from "@/components/ui/motion";
 
 export const Route = createFileRoute("/faculty/")({
   head: () => ({
@@ -53,10 +54,15 @@ function FacultyHome() {
   return (
     <FacultyShell>
       <div className="space-y-8">
-        <div>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">Console</div>
-          <h1 className="text-3xl font-bold font-display">Faculty Dashboard</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage routine, reserve classrooms and monitor changes.</p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">Console</div>
+            <h1 className="text-3xl font-bold font-display">Faculty Dashboard</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage routine, reserve classrooms and monitor changes.</p>
+          </div>
+          <LivePill tone={currentTimeSlot ? "success" : "primary"}>
+            <span>{currentTimeSlot ? `${today} · ${currentTimeSlot}` : `${today} · Off-hours`}</span>
+          </LivePill>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -67,36 +73,37 @@ function FacultyHome() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
-          <Link to="/faculty/routine" className="group rounded-2xl border border-border bg-card p-6 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
-            <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-              <CalendarDays className="size-5 text-primary-foreground" />
-            </div>
-            <h3 className="mt-4 text-lg font-semibold font-display">Central Routine</h3>
-            <p className="text-sm text-muted-foreground mt-1.5">Browse the full central timetable with the same filters students use, side by side with management tools.</p>
-          </Link>
-          <Link to="/faculty/manage" className="group rounded-2xl border border-border bg-card p-6 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
-            <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-              <ListChecks className="size-5 text-primary-foreground" />
-            </div>
-            <h3 className="mt-4 text-lg font-semibold font-display">Manage Routine</h3>
-            <p className="text-sm text-muted-foreground mt-1.5">Edit course, faculty, room, day, time slot, department, batch or section — students see changes instantly.</p>
-          </Link>
-          <Link to="/faculty/book" className="group rounded-2xl border border-border bg-card p-6 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
-            <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-              <CalendarPlus className="size-5 text-primary-foreground" />
-            </div>
-            <h3 className="mt-4 text-lg font-semibold font-display">Reserve a Classroom</h3>
-            <p className="text-sm text-muted-foreground mt-1.5">Book any available room for a day and time slot. Conflicts are detected automatically.</p>
-          </Link>
+          <QuickCard
+            to="/faculty/routine"
+            icon={CalendarDays}
+            title="Central Routine"
+            desc="Browse the full central timetable with the same filters students use, side by side with management tools."
+          />
+          <QuickCard
+            to="/faculty/manage"
+            icon={ListChecks}
+            title="Manage Routine"
+            desc="Edit course, faculty, room, day, time slot, department, batch or section — students see changes instantly."
+          />
+          <QuickCard
+            to="/faculty/book"
+            icon={CalendarPlus}
+            title="Reserve a Classroom"
+            desc="Book any available room for a day and time slot. Conflicts are detected automatically."
+          />
         </div>
 
         <section>
           <div className="flex items-center justify-between mb-3">
             <div>
               <h2 className="text-lg font-semibold font-display">Room Availability</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{currentTimeSlot ? `${today} · ${currentTimeSlot}` : "There is no active time slot right now."}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {currentTimeSlot ? `${today} · ${currentTimeSlot}` : "There is no active time slot right now."}
+              </p>
             </div>
-            <Link to="/faculty/book" className="text-sm text-primary hover:underline">Manage bookings</Link>
+            <Link to="/faculty/book" className="group text-sm font-medium text-primary hover:underline inline-flex items-center gap-1">
+              Manage bookings <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {liveRoutine.length === 0 && (
@@ -104,18 +111,27 @@ function FacultyHome() {
                 No rooms are available for the current time slot.
               </div>
             )}
-            {liveRoutine.map((item) => (
-              <div key={item.id} className="rounded-2xl border border-border bg-card p-4 hover:border-primary/40 transition-colors">
+            {liveRoutine.map((item, idx) => (
+              <SpotlightCard
+                key={item.id}
+                className="p-4 animate-fade-up"
+                style={{ animationDelay: `${idx * 45}ms` }}
+              >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{item.department}</span>
-                  <span className="text-xs font-mono text-muted-foreground">{item.time}</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-mono text-success">
+                    <span className="size-1.5 rounded-full bg-success animate-pulse" />
+                    {item.time}
+                  </span>
                 </div>
                 <div className="font-semibold mt-2">{item.course}</div>
-                <div className="text-sm text-muted-foreground mt-1">{item.batch} · {item.faculty || "TBA"}</div>
-                <div className="text-sm text-muted-foreground mt-2 inline-flex items-center gap-1.5">
-                  <MapPin className="size-3" /> Room {item.room || "—"}
+                <div className="text-sm text-muted-foreground mt-1">
+                  {item.batch} · {item.faculty || "TBA"}
                 </div>
-              </div>
+                <div className="text-sm text-muted-foreground mt-2 inline-flex items-center gap-1.5">
+                  <MapPin className="size-3 text-primary" /> Room {item.room || "—"}
+                </div>
+              </SpotlightCard>
             ))}
           </div>
         </section>
@@ -124,14 +140,32 @@ function FacultyHome() {
   );
 }
 
+function QuickCard({ to, icon: Icon, title, desc }: { to: string; icon: any; title: string; desc: string }) {
+  return (
+    <Link to={to} className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+      <SpotlightCard className="p-6 h-full">
+        <div className="size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+          <Icon className="size-5 text-primary-foreground" />
+        </div>
+        <h3 className="mt-4 text-lg font-semibold font-display">{title}</h3>
+        <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{desc}</p>
+      </SpotlightCard>
+    </Link>
+  );
+}
+
 function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4">
+    <SpotlightCard className="p-4">
       <div className="flex items-center justify-between">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
-        <Icon className="size-4 text-primary" />
+        <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+          <Icon className="size-4" />
+        </div>
       </div>
-      <div className="mt-1.5 text-base font-semibold font-display sm:text-xl">{value}</div>
-    </div>
+      <div className="mt-2 text-base font-semibold font-display sm:text-xl">
+        {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
+      </div>
+    </SpotlightCard>
   );
 }

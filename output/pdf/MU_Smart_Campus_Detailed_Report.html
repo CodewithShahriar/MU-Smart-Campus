@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MU Smart Campus — Comprehensive Project Report</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --secondary: #0f172a;
+      --accent: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --bg-card: #f8fafc;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text-main);
+      background: #f1f5f9;
+      padding: 2rem 0;
+    }
+
+    .report-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 3.5rem 4rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    }
+
+    /* Print styling */
+    @page {
+      size: A4;
+      margin: 18mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page);
+        font-size: 9pt;
+        color: #94a3b8;
+      }
+    }
+
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .report-container {
+        max-width: 100%;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      h1, h2, h3 {
+        page-break-after: avoid;
+      }
+      table, pre, blockquote, .card {
+        page-break-inside: avoid;
+      }
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-print:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* Cover Page Section */
+    .cover-page {
+      padding: 3rem 0 4rem 0;
+      text-align: center;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+    }
+
+    .cover-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--secondary);
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .cover-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 2.5rem auto;
+      font-weight: 400;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .meta-item strong {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+    }
+
+    .meta-item span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    /* Headings & Content */
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin: 2.2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin: 1.75rem 0 0.75rem 0;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin: 1.25rem 0 0.5rem 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-main);
+      font-size: 0.98rem;
+    }
+
+    ul, ol {
+      margin: 0 0 1.25rem 1.5rem;
+      color: var(--text-main);
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      background: #ffffff;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: var(--secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Callout & Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin: 1.25rem 0;
+      font-size: 0.92rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      color: #1e40af;
+    }
+
+    .alert-warning {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      color: #92400e;
+    }
+
+    .alert-success {
+      background: #ecfdf5;
+      border-left: 4px solid var(--success);
+      color: #065f46;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: #f1f5f9;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: #0f172a;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.45;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-blue { background: #e0f2fe; color: #0369a1; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+
+    .toc h3 {
+      margin-top: 0;
+      color: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .toc ul {
+      list-style-type: none;
+      margin-left: 0;
+      columns: 2;
+    }
+
+    .toc li {
+      margin-bottom: 0.5rem;
+      font-size: 0.92rem;
+    }
+
+    .toc a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-container">
+
+  <!-- Action Bar -->
+  <div class="action-bar no-print">
+    <div>
+      <span style="font-weight: 600; color: var(--secondary);">MU Smart Campus Documentation</span>
+      <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 0.5rem;">Official Project Report</span>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Print / Save as PDF
+    </button>
+  </div>
+
+  <!-- Cover Page -->
+  <div class="cover-page" style="page-break-after: always; padding: 4rem 1rem 3rem 1rem;">
+    <div style="margin-bottom: 2rem;">
+      <div style="font-size: 1.6rem; font-weight: 700; color: #1e293b; letter-spacing: 0.02em; font-family: 'Inter', sans-serif;">মেট্রোপলিটন ইউনিভার্সিটি</div>
+      <div style="font-size: 2.2rem; font-weight: 800; color: #0284c7; letter-spacing: -0.01em; text-transform: uppercase; margin-top: -0.25rem;">
+        METROPOLITAN <span style="color: #ef4444;">UNIVERSITY</span>
+      </div>
+      <div style="width: 120px; height: 3px; background: linear-gradient(90deg, #0284c7, #ef4444); margin: 0.8rem auto 0 auto; border-radius: 2px;"></div>
+    </div>
+
+    <h1 class="cover-title" style="font-size: 2.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">MU Smart Campus - Project Report</h1>
+    <div class="cover-subtitle" style="font-size: 1.1rem; color: #475569; margin-bottom: 2.5rem;">
+      Web-based campus timetable and classroom management portal
+    </div>
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; max-width: 480px; margin: 0 auto 2.5rem auto; padding: 1.2rem 1.8rem; text-align: center;">
+      <div style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Course Name: Project</div>
+      <div style="font-size: 1.05rem; font-weight: 700; color: #0284c7;">Course Code: CSE300</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 680px; margin: 0 auto 3rem auto; text-align: left;">
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: #0284c7; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 2px solid #e0f2fe; padding-bottom: 0.25rem;">Submitted to:</div>
+        <div style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">Md Shamihul Islam Khan Limon</div>
+        <div style="font-size: 0.88rem; color: #475569; margin-top: 0.25rem;">Department of Computer Science & Engineering</div>
+        <div style="font-size: 0.88rem; color: #475569;">Metropolitan University, Sylhet.</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: #0284c7; letter-spacing: 0.05em; margin-bottom: 0.75rem; border-bottom: 2px solid #e0f2fe; padding-bottom: 0.25rem;">Submitted by:</div>
+        <div style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">Abid Shahriar</div>
+        <div style="font-size: 0.9rem; color: #334155; margin-top: 0.25rem;"><strong>ID:</strong> 232-115-022</div>
+        <div style="font-size: 0.9rem; color: #334155;"><strong>Batch:</strong> 59th</div>
+        <div style="font-size: 0.9rem; color: #334155;"><strong>Section:</strong> A</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: #475569; font-size: 0.95rem; font-weight: 600; margin-top: 2rem;">
+      <div>Department of Computer Science & Engineering</div>
+      <div>Metropolitan University, Sylhet.</div>
+    </div>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc no-print">
+    <h3>Table of Contents</h3>
+    <ul>
+      <li><a href="#sec-1">1. Executive Summary</a></li>
+      <li><a href="#sec-2">2. Background & Problem Statement</a></li>
+      <li><a href="#sec-3">3. System Purpose & Objectives</a></li>
+      <li><a href="#sec-4">4. Stakeholders & User Personas</a></li>
+      <li><a href="#sec-5">5. Functional Scope & Modules</a></li>
+      <li><a href="#sec-6">6. Routing & Navigation Matrix</a></li>
+      <li><a href="#sec-7">7. Technical Architecture & Tech Stack</a></li>
+      <li><a href="#sec-8">8. Data Models & Pipeline</a></li>
+      <li><a href="#sec-9">9. Core Algorithms & Logic</a></li>
+      <li><a href="#sec-10">10. Setup, Operation & Deployment</a></li>
+      <li><a href="#sec-11">11. Security & Technical Limitations</a></li>
+      <li><a href="#sec-12">12. Strategic Roadmap & Future Work</a></li>
+      <li><a href="#sec-13">13. Conclusion</a></li>
+    </ul>
+  </div>
+
+  <!-- Section 1 -->
+  <h1 id="sec-1">1. Executive Summary</h1>
+  <p>
+    <strong>MU Smart Campus</strong> is an integrated, responsive web application designed for Metropolitan University, Sylhet. It provides real-time schedule exploration, classroom vacancy discovery, campus space utilization analytics, and academic course offer management.
+  </p>
+  <p>
+    The system serves two distinct user personas: <strong>Students</strong>, who enjoy an unauthenticated, zero-friction discovery portal for finding classes and free rooms; and <strong>Faculty/Administrators</strong>, who gain access to an authenticated workspace capable of inline schedule modifications, clash-aware classroom reservations, and batch course-offer management.
+  </p>
+  <div class="alert alert-info">
+    <div>
+      <strong>Current Architecture Highlight:</strong> The platform operates as a high-performance client-side application built with React 19, TanStack Start/Router, and Zustand. Institutional data is ingested from standardized CSV repositories and augmented through local browser state persistence (<code>musy-portal</code>).
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <h1 id="sec-2">2. Background & Problem Statement</h1>
+  <p>
+    In contemporary academic institutions like Metropolitan University, timetable coordination and classroom allocation frequently encounter friction:
+  </p>
+  <ul>
+    <li><strong>Static PDF Schedules:</strong> Traditional routines are circulated as massive static PDF tables or printed notice boards, making it cumbersome for students to search by section, batch, faculty initials, or room number.</li>
+    <li><strong>Room Availability Uncertainty:</strong> Students seeking empty rooms for group study, club meetings, or makeup classes have to physically wander corridors to locate unoccupied rooms.</li>
+    <li><strong>Faculty Scheduling Conflicts:</strong> Faculty members needing extra classes, makeup sessions, or examinations lack an instant feedback mechanism to detect room or faculty double-bookings.</li>
+    <li><strong>Scattered Course Offer Data:</strong> Departmental course offerings and semester registrations are often published across disparate spreadsheets, lacking a centralized filtering interface.</li>
+  </ul>
+
+  <!-- Section 3 -->
+  <h1 id="sec-3">3. System Purpose & Objectives</h1>
+  <div class="card">
+    <ul>
+      <li><strong>Centralized Schedule Indexing:</strong> Ingest 800+ schedule records and render them instantly searchable across 7+ dimensions (Day, Department, Batch, Section, Faculty, Course, Room, Slot).</li>
+      <li><strong>Instant Classroom Availability Engine:</strong> Compute real-time vacancy for 33 campus rooms across six 90-minute daily instructional periods.</li>
+      <li><strong>Interactive Faculty Reservation Workflow:</strong> Empower faculty to reserve free classrooms with real-time collision detection.</li>
+      <li><strong>Spatial Utilization Analytics:</strong> Provide data visualizations showing peak load hours, high-occupancy days, and room utilization distributions.</li>
+      <li><strong>Zero-Database Lightweight Deployment:</strong> Enable immediate academic demonstration and operation via static CSV pipelines with no heavy database server dependencies required for initial adoption.</li>
+    </ul>
+  </div>
+
+  <!-- Section 4 -->
+  <h1 id="sec-4">4. Stakeholders & User Personas</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Persona</th>
+        <th>Authentication</th>
+        <th>Primary Use Cases</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Student</strong></td>
+        <td><span class="badge badge-green">Public / None</span></td>
+        <td>Browse daily timetable, find currently ongoing class, locate empty classrooms for study/discussion, view department course offers.</td>
+      </tr>
+      <tr>
+        <td><strong>Faculty Member</strong></td>
+        <td><span class="badge badge-amber">Demo Auth</span></td>
+        <td>View assigned teaching routine, edit schedule entries, identify room conflicts, reserve rooms for makeup lectures or exams.</td>
+      </tr>
+      <tr>
+        <td><strong>Academic Coordinator</strong></td>
+        <td><span class="badge badge-blue">Admin Access</span></td>
+        <td>Analyze campus room utilization rates, identify over-allocated rooms, manage course offer CSV files and batch imports.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 5 -->
+  <h1 id="sec-5">5. Functional Scope & Modules</h1>
+
+  <h3>5.1 Student Portal</h3>
+  <ul>
+    <li><strong>Student Dashboard (<code>/student</code>):</strong> Displays today's active classes, current live time slot, key metrics (total classes, rooms, courses, departments), and quick navigational shortcuts.</li>
+    <li><strong>Routine Explorer (<code>/student/routine</code>):</strong> Comprehensive multi-filter interface with instant search for batch, section, faculty, room, and course code.</li>
+    <li><strong>Classroom Vacancy Matrix (<code>/student/rooms</code>):</strong> Interactive grid showing real-time status (Available, Occupied, Booked) for any selected day and time slot.</li>
+    <li><strong>Campus Analytics (<code>/student/analytics</code>):</strong> Charts detailing busy hours, department workloads, and room utilization trends powered by Recharts.</li>
+    <li><strong>Course Offer Browser (<code>/student/course-offer</code>):</strong> Searchable catalog of departmental course offerings.</li>
+  </ul>
+
+  <h3>5.2 Faculty Portal</h3>
+  <ul>
+    <li><strong>Authentication Guard (<code>/faculty/login</code>):</strong> Controlled demo login gateway with persistent credential validation.</li>
+    <li><strong>Faculty Dashboard (<code>/faculty</code>):</strong> Quick summary of faculty teaching load, upcoming classes, and quick reservation shortcuts.</li>
+    <li><strong>Routine Management Console (<code>/faculty/manage</code>):</strong> Inline schedule editor with built-in conflict detection indicators for room and faculty overlaps.</li>
+    <li><strong>Classroom Reservation Engine (<code>/faculty/book</code>):</strong> Intelligent room booking form that automatically filters out occupied rooms for the selected time slot.</li>
+    <li><strong>Course Offer Management (<code>/faculty/course-offer</code>):</strong> Administrative tooling for adding, editing, deleting, and CSV importing course offer entries.</li>
+  </ul>
+
+  <!-- Section 6 -->
+  <div class="page-break"></div>
+  <h1 id="sec-6">6. Routing & Navigation Matrix</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Route Path</th>
+        <th>Component Target</th>
+        <th>Access Level</th>
+        <th>Key Features</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/</code></td>
+        <td>Index Route</td>
+        <td>Public</td>
+        <td>Landing page, role selection (Student vs. Faculty).</td>
+      </tr>
+      <tr>
+        <td><code>/student</code></td>
+        <td>Student Home</td>
+        <td>Public</td>
+        <td>Real-time slot indicator, stats cards, today's schedule preview.</td>
+      </tr>
+      <tr>
+        <td><code>/student/routine</code></td>
+        <td>Routine Explorer</td>
+        <td>Public</td>
+        <td>Filter by Day, Dept, Batch, Sec, Course, Faculty, Room.</td>
+      </tr>
+      <tr>
+        <td><code>/student/rooms</code></td>
+        <td>Room Availability</td>
+        <td>Public</td>
+        <td>Interactive slot picker, capacity indicators, free/occupied status.</td>
+      </tr>
+      <tr>
+        <td><code>/student/analytics</code></td>
+        <td>Analytics View</td>
+        <td>Public</td>
+        <td>Utilization bar charts, department pie charts, busiest slot graphs.</td>
+      </tr>
+      <tr>
+        <td><code>/student/course-offer</code></td>
+        <td>Course Offers</td>
+        <td>Public</td>
+        <td>Text & table views of current semester course offerings.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty/login</code></td>
+        <td>Faculty Login</td>
+        <td>Public Entry</td>
+        <td>Credential authentication form with demo fallback.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty</code></td>
+        <td>Faculty Dashboard</td>
+        <td>Protected</td>
+        <td>Faculty greeting, summary metrics, scheduled lecture alerts.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty/routine</code></td>
+        <td>Faculty Routine</td>
+        <td>Protected</td>
+        <td>Personalized timetable filter by instructor initials.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty/manage</code></td>
+        <td>Routine Editor</td>
+        <td>Protected</td>
+        <td>Add/edit class records, room & faculty collision warnings.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty/book</code></td>
+        <td>Room Reservation</td>
+        <td>Protected</td>
+        <td>Slot picker, auto-vacancy detection, active booking cancellation.</td>
+      </tr>
+      <tr>
+        <td><code>/faculty/course-offer</code></td>
+        <td>Course Manager</td>
+        <td>Protected</td>
+        <td>CRUD operations on course offerings and CSV batch upload.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 7 -->
+  <h1 id="sec-7">7. Technical Architecture & Tech Stack</h1>
+  <p>The application employs modern front-end engineering practices designed for maximum speed, type-safety, and responsive ergonomics:</p>
+
+  <div class="card">
+    <table style="margin:0;">
+      <tr>
+        <td style="width: 28%; font-weight: 600;">Core Framework</td>
+        <td><strong>React 19.2.0</strong> with TypeScript 5.8 (Strict typing throughout)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Application Framework</td>
+        <td><strong>TanStack Start</strong> & <strong>TanStack Router</strong> (Full-stack SSR / SPA file-based routing)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Build Tooling</td>
+        <td><strong>Vite 8</strong> with Lovable TanStack Config & Nitro server integration</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">State Management</td>
+        <td><strong>Zustand 5</strong> with <code>persist</code> middleware (Storage key: <code>musy-portal</code>)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Styling & UI Components</td>
+        <td><strong>Tailwind CSS 4.2</strong> + <strong>Radix UI</strong> primitives (Accessible dialogs, popovers, selects)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Data Parsing Engine</td>
+        <td><strong>PapaParse 5.5</strong> (High performance CSV streaming & parsing)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Data Visualization</td>
+        <td><strong>Recharts 2.15</strong> (Responsive SVG charts for analytics)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 600;">Forms & Validation</td>
+        <td><strong>React Hook Form 7.71</strong> + <strong>Zod 3.24</strong> schema validation</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Section 8 -->
+  <h1 id="sec-8">8. Data Models & Pipeline</h1>
+
+  <h3>8.1 Core Entities</h3>
+  <pre><code>// 1. Class Routine Entry
+export interface ClassEntry {
+  id: string;               // Unique hash (day-time-room-course-faculty)
+  day: string;              // "Sunday", "Monday", "Tuesday", etc.
+  department: string;       // "CSE", "EEE", "BBA", "LAW", "SWE", "ENG", etc.
+  batch: string;            // Batch number (e.g. "60", "61")
+  section: string;          // Section letter (e.g. "A", "B")
+  time: string;             // Slot (e.g. "09:00 AM - 10:30 AM")
+  course: string;           // Course Code / Title (e.g. "CSE 311")
+  room: string;             // Room Number (e.g. "501", "Lab 2")
+  faculty: string;          // Faculty Initials (e.g. "MSI", "AA")
+  isBooked?: boolean;       // True if dynamically reserved by faculty
+}
+
+// 2. Classroom Definition
+export interface RoomInfo {
+  roomNumber: string;       // "301", "405", "Lab 1"
+  type: string;             // "Classroom", "Computer Lab", "Electrical Lab"
+  capacity: number;         // Seating capacity (e.g. 50, 60)
+  primaryDept: string;      // Department ownership
+}
+
+// 3. Dynamic Reservation
+export interface RoomBooking {
+  id: string;               // UUID
+  day: string;
+  time: string;
+  room: string;
+  course: string;
+  faculty: string;
+  createdAt: string;        // ISO 8601 string
+}</code></pre>
+
+  <h3>8.2 Current Data Asset Snapshot</h3>
+  <ul>
+    <li><strong><code>routine.csv</code>:</strong> 808 active class sessions scheduled across Sunday through Thursday.</li>
+    <li><strong><code>rooms.csv</code>:</strong> 33 distinct classrooms and specialized laboratories across university floors.</li>
+    <li><strong><code>course_offers.csv</code>:</strong> 373 course offer records covering undergraduate and graduate curriculums.</li>
+  </ul>
+
+  <!-- Section 9 -->
+  <div class="page-break"></div>
+  <h1 id="sec-9">9. Core Algorithms & Logic</h1>
+
+  <h3>9.1 Room Availability Derivation</h3>
+  <p>To determine if room $R$ is vacant on day $D$ during slot $T$:</p>
+  <pre><code>function getRoomStatus(room, day, time, routineEntries, bookings) {
+  // 1. Check dynamic faculty reservations first
+  const activeBooking = bookings.find(b => b.room === room && b.day === day && b.time === time);
+  if (activeBooking) return { status: 'booked', details: activeBooking };
+
+  // 2. Check scheduled curriculum routine
+  const routineClass = routineEntries.find(c => c.room === room && c.day === day && c.time === time);
+  if (routineClass) return { status: 'occupied', details: routineClass };
+
+  // 3. Room is completely free
+  return { status: 'available', details: null };
+}</code></pre>
+
+  <h3>9.2 Real-Time Conflict Detection Engine</h3>
+  <p>When a faculty member edits or creates a routine entry, the system evaluates two simultaneous collision vectors:</p>
+  <ul>
+    <li><strong>Room Double-Booking:</strong> Another class or booking is already scheduled in the same room on the same day and time slot.</li>
+    <li><strong>Faculty Collision:</strong> The designated faculty instructor is already assigned to another lecture elsewhere during the identical time window.</li>
+  </ul>
+  <p>
+    The system renders real-time non-blocking warning banners with full context regarding the conflicting class to ensure academic flexibility while maintaining clarity.
+  </p>
+
+  <!-- Section 10 -->
+  <h1 id="sec-10">10. Setup, Operation & Deployment</h1>
+
+  <h3>10.1 Local Development Environment</h3>
+  <pre><code># 1. Clone repository & install dependencies
+npm install
+
+# 2. Launch Vite development server
+npm run dev
+# Server accessible at: http://localhost:5173
+
+# 3. Code quality & formatting
+npm run lint
+npm run format
+
+# 4. Production build validation
+npm run build
+npm run preview</code></pre>
+
+  <h3>10.2 Production Deployment Note</h3>
+  <p>
+    The project is preconfigured with <strong>Nitro</strong> for deployment on edge and cloud platforms such as Cloudflare Pages, Vercel, or Node.js Docker containers. Static CSV datasets are hosted directly in the <code>public/data</code> path, enabling low-latency global delivery without database cold starts.
+  </p>
+
+  <!-- Section 11 -->
+  <h1 id="sec-11">11. Security & Technical Limitations</h1>
+  <div class="card">
+    <div class="alert alert-warning">
+      <div>
+        <strong>Important Operational Disclosures:</strong>
+        <ol style="margin: 0.5rem 0 0 1rem;">
+          <li><strong>Client-Side Authentication:</strong> Faculty authentication currently uses a client-evaluated credential check (<code>admin@gmail.com</code> / <code>123456</code>). This is suitable for demonstration purposes but requires integration with institutional OAuth/SSO for enterprise deployment.</li>
+          <li><strong>Local Persistence Boundary:</strong> Modifications, reservations, and edits are stored in the user's browser local storage (<code>musy-portal</code>). Changes are not automatically synchronized across separate client machines.</li>
+          <li><strong>Non-Enforced Conflict Validation:</strong> Collision warnings notify users but do not strictly abort saves, permitting intentional co-scheduling or seminar bookings.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 12 -->
+  <h1 id="sec-12">12. Strategic Roadmap & Future Work</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Initiative</th>
+        <th>Technical Scope</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Phase 1</strong></td>
+        <td>Institutional Identity</td>
+        <td>Integrate Metropolitan University Google Workspace OAuth 2.0 / SAML SSO with JWT verification.</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 2</strong></td>
+        <td>Centralized Cloud DB</td>
+        <td>Migrate from local storage to PostgreSQL / Supabase with Row Level Security (RLS) and real-time triggers.</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 3</strong></td>
+        <td>Real-Time WebSockets</td>
+        <td>Broadcast instant notifications when faculty reserve or release classrooms.</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 4</strong></td>
+        <td>Mobile PWA & Push</td>
+        <td>Add Service Worker caching and push notifications for class rescheduling alerts.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 13 -->
+  <h1 id="sec-13">13. Conclusion</h1>
+  <p>
+    <strong>MU Smart Campus</strong> successfully transforms static, fragmented academic schedules into a vibrant, searchable, and intuitive web application. By bridging the gap between student information needs and faculty room reservation requirements, the application delivers significant efficiency improvements to daily campus operations at Metropolitan University.
+  </p>
+
+  <div class="footer">
+    MU Smart Campus Project Report • Prepared for Metropolitan University, Sylhet • Confidential & Academic Use
+  </div>
+
+</div>
+
+</body>
+</html>

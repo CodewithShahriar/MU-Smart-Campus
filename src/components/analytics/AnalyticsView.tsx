@@ -19,6 +19,7 @@ import {
 import { Activity, TrendingUp, Building2, Clock, Flame, Snowflake, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isRecognizedDepartment } from "@/lib/data/utils";
+import { AnimatedNumber, SpotlightCard } from "@/components/ui/motion";
 
 const PALETTE = ["#2563eb", "#0ea5e9", "#1d4ed8", "#38bdf8", "#0891b2", "#60a5fa", "#0369a1", "#7dd3fc"];
 
@@ -318,7 +319,7 @@ function Highlight({
   tone: "hot" | "cold";
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-elegant">
+    <SpotlightCard className="p-6 shadow-elegant">
       <div
         className={cn(
           "absolute -right-10 -top-10 size-40 rounded-full blur-3xl opacity-40",
@@ -332,7 +333,7 @@ function Highlight({
         <div className="text-4xl font-bold font-display text-gradient mt-2">{value}</div>
         <p className="text-sm text-muted-foreground mt-2">{text}</p>
       </div>
-    </div>
+    </SpotlightCard>
   );
 }
 
@@ -350,32 +351,34 @@ function KPI({
   progress?: number;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 hover:shadow-elegant hover:-translate-y-0.5 transition-all">
+    <SpotlightCard className="p-4">
       <div className="flex items-center justify-between">
         <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
-        <span className="size-8 rounded-xl bg-primary/10 grid place-items-center">
+        <span className="size-8 rounded-xl bg-primary/10 grid place-items-center transition-transform duration-300 group-hover:scale-110">
           <Icon className="size-4 text-primary" />
         </span>
       </div>
-      <div className="text-2xl font-semibold font-display mt-2">{value}</div>
+      <div className="text-2xl font-semibold font-display mt-2">
+        {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
+      </div>
       {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
       {progress !== undefined && (
         <div className="h-1.5 rounded-full bg-muted overflow-hidden mt-2.5">
-          <div className="h-full rounded-full bg-gradient-primary" style={{ width: `${Math.min(100, progress)}%` }} />
+          <div className="h-full rounded-full bg-gradient-primary transition-all duration-700" style={{ width: `${Math.min(100, progress)}%` }} />
         </div>
       )}
-    </div>
+    </SpotlightCard>
   );
 }
 
 function Panel({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-elegant">
+    <SpotlightCard className="p-5 shadow-elegant">
       <div className="mb-3">
         <h3 className="text-sm font-semibold font-display">{title}</h3>
         {hint && <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>}
       </div>
       {children}
-    </div>
+    </SpotlightCard>
   );
 }
