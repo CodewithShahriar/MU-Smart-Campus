@@ -90,9 +90,10 @@
   --sidebar-ring: oklch(0.55 0.18 255);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.5 0.2 262), oklch(0.68 0.14 215));
-  --gradient-mesh: radial-gradient(at 20% 10%, oklch(0.72 0.16 258 / 0.32) 0px, transparent 50%),
-                   radial-gradient(at 80% 20%, oklch(0.75 0.13 220 / 0.3) 0px, transparent 50%),
-                   radial-gradient(at 50% 90%, oklch(0.78 0.11 200 / 0.28) 0px, transparent 50%);
+  --gradient-mesh: radial-gradient(ellipse 85% 65% at 15% 10%, oklch(0.75 0.14 258 / 0.22) 0%, transparent 72%),
+                   radial-gradient(ellipse 80% 60% at 85% 18%, oklch(0.78 0.11 220 / 0.2) 0%, transparent 74%),
+                   radial-gradient(ellipse 90% 70% at 50% 95%, oklch(0.8 0.1 200 / 0.18) 0%, transparent 76%),
+                   linear-gradient(165deg, oklch(0.985 0.005 285) 0%, oklch(0.965 0.015 245) 100%);
   --shadow-elegant: 0 20px 40px -20px oklch(0.35 0.16 255 / 0.35);
   --shadow-glow: 0 0 40px oklch(0.62 0.17 245 / 0.35);
 }
@@ -131,9 +132,10 @@
   --sidebar-ring: oklch(0.7 0.16 250);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.66 0.19 258), oklch(0.72 0.15 210));
-  --gradient-mesh: radial-gradient(at 20% 10%, oklch(0.45 0.16 258 / 0.25) 0px, transparent 55%),
-                   radial-gradient(at 80% 20%, oklch(0.48 0.14 220 / 0.22) 0px, transparent 55%),
-                   radial-gradient(at 50% 90%, oklch(0.42 0.12 200 / 0.2) 0px, transparent 55%);
+  --gradient-mesh: radial-gradient(ellipse 90% 70% at 12% 12%, oklch(0.38 0.13 255 / 0.28) 0%, transparent 75%),
+                   radial-gradient(ellipse 85% 65% at 88% 18%, oklch(0.4 0.11 220 / 0.22) 0%, transparent 75%),
+                   radial-gradient(ellipse 95% 75% at 48% 92%, oklch(0.34 0.1 205 / 0.2) 0%, transparent 78%),
+                   linear-gradient(165deg, oklch(0.13 0.03 272) 0%, oklch(0.16 0.035 250) 55%, oklch(0.14 0.03 265) 100%);
   --shadow-elegant: 0 20px 44px -18px oklch(0.05 0.04 260 / 0.75);
   --shadow-glow: 0 0 36px oklch(0.66 0.18 245 / 0.28);
 }

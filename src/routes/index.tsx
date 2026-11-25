@@ -5,10 +5,8 @@ import {
   ArrowRight,
   CalendarClock,
   DoorOpen,
-  BarChart3,
-  Sparkles,
 } from "lucide-react";
-import { LivePill, SpotlightCard } from "@/components/ui/motion";
+import { SpotlightCard } from "@/components/ui/motion";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export const Route = createFileRoute("/")({
@@ -24,17 +22,13 @@ export const Route = createFileRoute("/")({
 function Landing() {
   return (
     <div className="min-h-screen bg-background bg-mesh relative overflow-hidden">
-      {/* Subtle architectural grid & animated aurora orbs */}
-      <div className="absolute inset-0 bg-grid opacity-35 pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
+      {/* Subtle architectural grid & wide, seamless ambient washes */}
+      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_80%)]" />
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-32 size-[28rem] rounded-full bg-primary/20 blur-3xl animate-blob" />
+        <div className="absolute -top-[20%] -right-[10%] w-[55vw] h-[55vw] max-w-[44rem] max-h-[44rem] rounded-full bg-primary/10 blur-[140px] animate-blob" />
         <div
-          className="absolute -bottom-24 -left-24 size-[26rem] rounded-full bg-accent/50 blur-3xl animate-blob"
-          style={{ animationDelay: "3s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/3 size-72 rounded-full bg-chart-2/15 blur-3xl animate-float-slow"
-          style={{ animationDelay: "1.5s" }}
+          className="absolute -bottom-[20%] -left-[10%] w-[55vw] h-[55vw] max-w-[44rem] max-h-[44rem] rounded-full bg-chart-2/10 blur-[140px] animate-blob"
+          style={{ animationDelay: "4s" }}
         />
       </div>
 
@@ -60,13 +54,6 @@ function Landing() {
 
         <div className="flex-1 grid lg:grid-cols-2 items-center gap-12 py-12">
           <div className="space-y-6 animate-fade-up">
-            <LivePill>
-              <span>
-                Live routine ·{" "}
-                {new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}
-              </span>
-            </LivePill>
-
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display leading-[1.04]">
               One portal for the entire{" "}
               <span className="text-gradient">campus schedule.</span>
@@ -79,7 +66,6 @@ function Landing() {
             <div className="flex flex-wrap gap-3 pt-1">
               <Feature icon={CalendarClock} label="Central Routine" />
               <Feature icon={DoorOpen} label="Live Room Status" />
-              <Feature icon={BarChart3} label="Utilization Insights" />
             </div>
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -87,7 +73,6 @@ function Landing() {
                 to="/student/routine"
                 className="group inline-flex items-center gap-2 rounded-xl bg-gradient-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-glow transition-all duration-300 hover:opacity-95 hover:-translate-y-0.5 active:scale-[0.98]"
               >
-                <Sparkles className="size-4 transition-transform duration-300 group-hover:rotate-12" />
                 Explore Live Routine
                 <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
@@ -172,7 +157,7 @@ function RoleCard({
 }) {
   return (
     <Link to={to} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl">
-      <SpotlightCard className="p-6 sm:p-7">
+      <SpotlightCard className="p-6 sm:p-7 border-primary/20 dark:border-white/15 ring-1 ring-inset ring-foreground/5 hover:border-primary/50 dark:hover:border-primary/50">
         <div
           className={`absolute -top-24 -right-24 size-52 rounded-full bg-gradient-to-br ${accent} opacity-15 blur-3xl group-hover:opacity-30 transition-opacity duration-500`}
         />

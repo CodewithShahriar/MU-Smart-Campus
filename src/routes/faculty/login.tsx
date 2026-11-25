@@ -46,9 +46,9 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background bg-mesh relative overflow-hidden flex items-center justify-center p-6">
-      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
-      <div className="absolute -top-32 -right-32 size-96 rounded-full bg-primary/20 blur-3xl animate-blob pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 size-96 rounded-full bg-accent/40 blur-3xl animate-blob pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
+      <div className="absolute -top-[20%] -right-[10%] w-[50vw] h-[50vw] max-w-[40rem] max-h-[40rem] rounded-full bg-primary/10 blur-[140px] animate-blob pointer-events-none" />
+      <div className="absolute -bottom-[20%] -left-[10%] w-[50vw] h-[50vw] max-w-[40rem] max-h-[40rem] rounded-full bg-chart-2/10 blur-[140px] animate-blob pointer-events-none" />
 
       <div className="absolute top-6 right-6 z-10">
         <ThemeToggle />
