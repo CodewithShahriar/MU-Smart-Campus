@@ -1,92 +1,174 @@
+<div align="center">
+
+<img src="public/brand-logo.png" alt="MU Smart Campus Logo" width="88" />
+
 # MU Smart Campus
 
-MU Smart Campus is a modern web-based campus management portal designed for students and faculty of MU Sylhet. The application provides an interactive experience for viewing class routines, finding available rooms, managing classroom bookings, and exploring campus utilization analytics.
+**Digital Routine, Live Room Availability & Campus Analytics Portal for Metropolitan University, Sylhet**
+
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TanStack Start](https://img.shields.io/badge/TanStack_Start-1.168-FF4154?style=flat-square)](https://tanstack.com/start)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
+
+</div>
+
+---
 
 ## Overview
 
-This project brings together a clean dashboard experience and data-driven insights in a single platform. It is built with React, TypeScript, TanStack Router, Vite, and Tailwind CSS to deliver a fast and professional user experience.
+**MU Smart Campus** is a modern, responsive web portal built for students and faculty of **Metropolitan University, Sylhet**. It centralizes the **Autumn Term 2026** academic schedule across all 8 departments (`CSE`, `EEE`, `SWE`, `BBA`, `ENG`, `ECO`, `LAW`, `DSC`), provides real-time classroom availability with floor and room-type filtering, and offers utilization analytics alongside faculty-side schedule and booking management.
+
+---
+
+## Portal Preview
+
+### Landing Portal
+Clean entry experience with open-access Student Portal entry, protected Faculty Sign-In, light/dark theme toggle, and smooth right-to-left View Transitions.
+
+![Landing Portal](docs/screenshots/landing-portal.jpg)
+
+### Student Dashboard
+Real-time overview of total scheduled classes, courses, departments, active rooms, live running classes for the current slot, and instant navigation to Routine, Rooms, Courses, and Analytics.
+
+![Student Dashboard](docs/screenshots/student-dashboard.jpg)
+
+---
 
 ## Key Features
 
-- Student-facing dashboard with today’s classes, current time slot, and quick access to key campus tools
-- Central routine explorer for filtering by department, batch, section, day, faculty, course, or room
-- Room availability view for finding free classrooms at a glance
-- Faculty dashboard for routine management and classroom reservations
-- Booking system with conflict-friendly room reservation workflow
-- Analytics view for room utilization, busy hours, department-wise load, and most-used rooms
-- CSV-based data loading for routine and room inventory
+### Student Portal (Open Access)
+- **Live Overview Dashboard**: Displays today's schedule context, current time slot, active classes happening right now, and campus-wide KPIs.
+- **Central Routine Explorer**:
+  - Instant search across courses, faculty, rooms, and batches.
+  - Department & day quick-filter pills with live class counts.
+  - Multi-filter bar by **Department**, **Batch**, **Day**, **Time Slot**, **Faculty**, **Course**, and **Room**.
+  - Clean desktop table view and responsive mobile card view with live slot indicators.
+- **Real-Time Room Availability**:
+  - Live **Available**, **Occupied**, and **Booked** status for every room by day and time slot.
+  - Filter by **Room Type** (`Classroom`, `Lab`, `Extension`) and **Floor** (`Ground (GL)`, `Floor 1 (1xx)` – `Floor 5 (5xx)`, `Extension (E)`).
+  - Tap any room card to view its full-day slot-by-slot schedule modal.
+- **Course Offers**: Browse batch-, section-, and semester-wise course offerings.
+- **Utilization Analytics**: Interactive Recharts visualizations for day-wise class load, busiest time slots, department-wise distribution, and most/least used rooms.
+
+### Faculty Portal (Protected)
+- **Faculty Dashboard**: Quick summary of campus classes, reservations, and management shortcuts.
+- **Routine Management**: Add, edit, and manage class routine entries.
+- **Course Offer Management**: Create and update batch/semester course lists.
+- **Conflict-Aware Room Booking**: Reserve available classrooms for specific days and time slots with automatic conflict checks.
+
+### UX & Performance
+- **Smooth Transitions**: Preloaded routes with `View Transitions API` right-to-left slide from the landing page and blur-rise tab transitions inside the Student Portal.
+- **Mobile-First Responsiveness**: Adaptive layouts, 2-column mobile filter grids, bottom-friendly navigation, and responsive modals.
+- **Light & Dark Mode**: Full theme support with light mode as the default for first-time visitors.
+
+---
 
 ## Tech Stack
 
-- Frontend: React 19 + TypeScript
-- Routing: TanStack Router / TanStack Start
-- State Management: Zustand + TanStack Query
-- Styling: Tailwind CSS + shadcn/ui-inspired components
-- Data Parsing: PapaParse
-- Build Tool: Vite
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | React 19, TypeScript 5.8, TanStack Start & TanStack Router |
+| **State & Data** | Zustand, TanStack Query, PapaParse (CSV parsing) |
+| **Styling & UI** | Tailwind CSS v4, Radix UI primitives, Lucide React icons |
+| **Charts** | Recharts |
+| **Build & Server** | Vite 8, Nitro |
+| **Code Quality** | ESLint 9, Prettier 3 |
+
+---
 
 ## Project Structure
 
-- src/routes/student: student-side pages and dashboards
-- src/routes/faculty: faculty-side pages and management tools
-- src/components: reusable UI components, layout shells, and analytics views
-- src/lib/data: application state, data parsing, and utility logic
-- public/data: CSV files used for campus routine and room inventory
+```text
+MU Smart Campus/
+├── docs/
+│   └── screenshots/          # Portal preview images used in documentation
+├── public/
+│   ├── brand-logo.png        # Portal brand icon
+│   └── data/
+│       ├── routine.csv       # Central Autumn 2026 class schedule
+│       ├── rooms.csv         # Campus room inventory & capacities
+│       └── course_offers.csv # Department/batch course offerings
+└── src/
+    ├── components/
+    │   ├── analytics/        # Utilization charts and KPI views
+    │   ├── course/           # Course offer explorer & editor
+    │   ├── layout/           # StudentShell & FacultyShell navigation layouts
+    │   ├── routine/          # RoutineExplorer table, cards, and filters
+    │   └── ui/               # Reusable UI primitives, motion & doodle bg
+    ├── lib/
+    │   └── data/             # Store, CSV parsers, types, and utilities
+    └── routes/
+        ├── index.tsx         # Landing portal
+        ├── student/          # Student overview, routine, courses, rooms, analytics
+        └── faculty/          # Faculty login, dashboard, manage, course-offer, book
+```
 
-## Prerequisites
-
-Make sure the following are installed on your machine:
-
-- Node.js 18 or newer
-- npm
+---
 
 ## Getting Started
 
-1. Install dependencies:
+### Prerequisites
+
+- **Node.js** `18+` (recommended `20+`)
+- **npm**
+
+### Installation & Local Development
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/CodewithShahriar/MU-Smart-Campus.git
+   cd MU-Smart-Campus
+   ```
+
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-2. Start the development server:
+3. **Start the development server**
 
    ```bash
    npm run dev
    ```
 
-3. Open the local URL shown in the terminal, typically:
+4. **Open in your browser**
 
    ```text
    http://localhost:5173
    ```
 
+---
+
 ## Available Scripts
 
-- npm run dev: start the development server
-- npm run build: create a production build
-- npm run preview: preview the production build locally
-- npm run lint: run ESLint checks
-- npm run format: format the codebase with Prettier
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Build client and SSR production bundles |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint across the codebase |
+| `npm run format` | Format files with Prettier |
 
-## Data Sources
+---
 
-The application loads campus information from the following files:
+## Data Sources & Demo Notes
 
-- public/data/routine.csv
-- public/data/rooms.csv
+- Schedule, room inventory, and course offerings are loaded from `public/data/routine.csv`, `public/data/rooms.csv`, and `public/data/course_offers.csv`.
+- Faculty edits and room reservations are persisted locally in the browser (`localStorage`) for demonstration and development.
+- Demo faculty sign-in credentials:
+  - **Email**: `admin@gmail.com`
+  - **Password**: `123456`
 
-You can update room and routine information directly in these CSV files to reflect changes in the campus schedule.
-
-## Development Notes
-
-- The project uses file-based routing through TanStack Router.
-- Faculty-side actions such as editing routines and creating bookings are persisted locally in the browser for demo and development purposes.
-- The current local demo login for faculty is configured as admin@gmail.com with the password 123456.
-
-## Contribution
-
-Contributions are welcome. If you would like to improve the platform, feel free to open an issue or submit a pull request.
+---
 
 ## License
 
-This project is currently intended for academic, internal, or demo use unless a different license is added later.
+Intended for academic, internal campus, and demonstration use at Metropolitan University, Sylhet.
+
+<div align="center">
+  <sub>Developed by <a href="https://github.com/CodewithShahriar">Code with Shahriar</a></sub>
+</div>
