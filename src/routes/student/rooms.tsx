@@ -20,6 +20,32 @@ export const Route = createFileRoute("/student/rooms")({
 });
 
 type Status = "available" | "occupied" | "booked";
+type RoomCategory = "classroom" | "lab" | "extension";
+
+const FLOOR_OPTIONS = [
+  { value: "all", label: "All Floors" },
+  { value: "ground", label: "Ground (GL)" },
+  { value: "floor-1", label: "Floor 1 (1xx)" },
+  { value: "floor-2", label: "Floor 2 (2xx)" },
+  { value: "floor-3", label: "Floor 3 (3xx)" },
+  { value: "floor-4", label: "Floor 4 (4xx)" },
+  { value: "floor-5", label: "Floor 5 (5xx)" },
+  { value: "extension", label: "Extension (E)" },
+] as const;
+
+function getRoomCategory(roomNumber: string, roomType: string): RoomCategory {
+  if (/^E-/i.test(roomNumber)) return "extension";
+  if (/\blab\b/i.test(roomType)) return "lab";
+  return "classroom";
+}
+
+function getRoomFloor(roomNumber: string): string {
+  if (/^GL-/i.test(roomNumber)) return "ground";
+  if (/^E-/i.test(roomNumber)) return "extension";
+  const m = roomNumber.match(/^(\d)\d{2}$/);
+  if (m) return `floor-${m[1]}`;
+  return "other";
+}
 
 function RoomsPage() {
   const rooms = useData((s) => s.rooms);
@@ -32,6 +58,8 @@ function RoomsPage() {
   const [slot, setSlot] = useState<string>(nowSlot || TIME_SLOTS[0]);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | Status>("all");
+  const [typeFilter, setTypeFilter] = useState<"all" | RoomCategory>("all");
+  const [floorFilter, setFloorFilter] = useState<string>("all");
   const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
 
   const roomStatus = useMemo(() => {
@@ -79,6 +107,8 @@ function RoomsPage() {
 
   const filtered = enriched.filter((r) => {
     if (filter !== "all" && r.status !== filter) return false;
+    if (typeFilter !== "all" && getRoomCategory(r.number, r.type) !== typeFilter) return false;
+    if (floorFilter !== "all" && getRoomFloor(r.number) !== floorFilter) return false;
     if (q && !r.number.toLowerCase().includes(q.toLowerCase()) && !r.type.toLowerCase().includes(q.toLowerCase())) return false;
     return true;
   });
@@ -119,47 +149,74 @@ function RoomsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <MetricCard label="Total Rooms" value={counts.total} tone="muted" />
           <MetricCard label="Available" value={counts.available} tone="success" />
           <MetricCard label="Occupied" value={counts.occupied} tone="destructive" />
           <MetricCard label="Booked" value={counts.booked} tone="warning" />
         </div>
 
-        <div className="rounded-2xl border border-border/80 bg-card/90 backdrop-blur-sm p-4 sm:p-5 shadow-elegant space-y-4">
-          <div className="grid md:grid-cols-3 gap-3">
-            <label className="flex flex-col gap-1">
+        <div className="rounded-2xl border border-border/80 bg-card/90 backdrop-blur-sm p-3.5 sm:p-5 shadow-elegant space-y-3.5 sm:space-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
+            <label className="flex flex-col gap-1 min-w-0">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Day</span>
               <select
                 value={day}
                 onChange={(e) => setDay(e.target.value)}
-                className="h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary"
+                className="w-full min-w-0 h-10 px-2.5 sm:px-3 rounded-xl border border-border bg-background text-xs sm:text-sm focus:outline-none focus:border-primary"
               >
                 {DAYS.map((d) => (
                   <option key={d}>{d}</option>
                 ))}
               </select>
             </label>
-            <label className="flex flex-col gap-1">
+            <label className="flex flex-col gap-1 min-w-0">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Time Slot</span>
               <select
                 value={slot}
                 onChange={(e) => setSlot(e.target.value)}
-                className="h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary"
+                className="w-full min-w-0 h-10 px-2.5 sm:px-3 rounded-xl border border-border bg-background text-xs sm:text-sm focus:outline-none focus:border-primary"
               >
                 {TIME_SLOTS.map((t) => (
                   <option key={t}>{t}</option>
                 ))}
               </select>
             </label>
-            <label className="relative flex flex-col gap-1">
+            <label className="flex flex-col gap-1 min-w-0">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Type</span>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value as "all" | RoomCategory)}
+                className="w-full min-w-0 h-10 px-2.5 sm:px-3 rounded-xl border border-border bg-background text-xs sm:text-sm focus:outline-none focus:border-primary"
+              >
+                <option value="all">All Types</option>
+                <option value="classroom">Classroom</option>
+                <option value="lab">Lab</option>
+                <option value="extension">Extension</option>
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 min-w-0">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Floor</span>
+              <select
+                value={floorFilter}
+                onChange={(e) => setFloorFilter(e.target.value)}
+                className="w-full min-w-0 h-10 px-2.5 sm:px-3 rounded-xl border border-border bg-background text-xs sm:text-sm focus:outline-none focus:border-primary"
+              >
+                {FLOOR_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="relative flex flex-col gap-1 col-span-2 lg:col-span-1">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Search</span>
               <Search className="absolute left-3 top-[calc(50%+7px)] size-4 text-muted-foreground" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Room number or type…"
-                className="h-10 pl-9 pr-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full h-10 pl-9 pr-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </label>
           </div>
@@ -190,7 +247,7 @@ function RoomsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4">
           {filtered.map((r, idx) => (
             <RoomCard key={r.number} room={r} index={idx} onSelect={() => setSelectedRoom(r)} />
           ))}
@@ -203,7 +260,7 @@ function RoomsPage() {
       </div>
 
       <Dialog open={Boolean(selectedRoom)} onOpenChange={(open) => !open && setSelectedRoom(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="w-[calc(100vw-1.5rem)] max-w-lg rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 font-display">
               <DoorOpen className="size-5 text-primary" />

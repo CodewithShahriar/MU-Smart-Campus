@@ -69,10 +69,10 @@ function Overview() {
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={CalendarClock} label="Total Classes" value={stats.total} delay={0} />
-        <StatCard icon={BookOpen} label="Courses" value={stats.courses} delay={60} />
-        <StatCard icon={Users} label="Departments" value={stats.departments} delay={120} />
-        <StatCard icon={MapPin} label="Rooms in Use" value={stats.rooms} delay={180} />
+        <StatCard icon={CalendarClock} label="Total Classes" value={stats.total} tone="blue" delay={0} />
+        <StatCard icon={BookOpen} label="Courses" value={stats.courses} tone="violet" delay={60} />
+        <StatCard icon={Users} label="Departments" value={stats.departments} tone="emerald" delay={120} />
+        <StatCard icon={MapPin} label="Rooms in Use" value={stats.rooms} tone="amber" delay={180} />
       </section>
 
       <section className="grid md:grid-cols-3 gap-5">
@@ -82,6 +82,7 @@ function Overview() {
           title="Central Routine"
           desc="Filter by department, batch, section, day, faculty, course or room."
           cta="Open routine"
+          tone="blue"
           delay={80}
         />
         <ActionCard
@@ -90,6 +91,7 @@ function Overview() {
           title="Available Rooms"
           desc="See free classrooms right now, colour-coded and searchable."
           cta="Find a free room"
+          tone="emerald"
           delay={150}
         />
         <ActionCard
@@ -98,6 +100,7 @@ function Overview() {
           title="Utilization Analytics"
           desc="Peak hours, most-used rooms, department-wise load and more."
           cta="View analytics"
+          tone="violet"
           delay={220}
         />
       </section>
@@ -122,11 +125,10 @@ function Overview() {
                 No classes are running in this slot.
               </div>
             )}
-            {nowClasses.map((c, idx) => (
+            {nowClasses.map((c) => (
               <SpotlightCard
                 key={c.id}
-                className="p-4 animate-fade-up"
-                style={{ animationDelay: `${idx * 45}ms` }}
+                className="p-4"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
@@ -157,22 +159,65 @@ function greet() {
   return "evening";
 }
 
+const STAT_TONES = {
+  blue: {
+    card: "bg-blue-50/75 border-blue-300 dark:bg-blue-950/25 dark:border-blue-500/45",
+    icon: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
+  },
+  violet: {
+    card: "bg-violet-50/75 border-violet-300 dark:bg-violet-950/25 dark:border-violet-500/45",
+    icon: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
+  },
+  emerald: {
+    card: "bg-emerald-50/75 border-emerald-300 dark:bg-emerald-950/25 dark:border-emerald-500/45",
+    icon: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
+  amber: {
+    card: "bg-amber-50/75 border-amber-300 dark:bg-amber-950/25 dark:border-amber-500/45",
+    icon: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+} as const;
+
+const ACTION_TONES = {
+  blue: {
+    card: "bg-blue-50/50 border-blue-300 hover:border-blue-500 dark:bg-blue-950/20 dark:border-blue-500/45",
+    orb: "bg-blue-500/15 group-hover:bg-blue-500/25",
+    badge: "bg-gradient-to-br from-blue-600 to-sky-500",
+    cta: "text-blue-600 dark:text-blue-400",
+  },
+  emerald: {
+    card: "bg-emerald-50/50 border-emerald-300 hover:border-emerald-500 dark:bg-emerald-950/20 dark:border-emerald-500/45",
+    orb: "bg-emerald-500/15 group-hover:bg-emerald-500/25",
+    badge: "bg-gradient-to-br from-emerald-600 to-teal-500",
+    cta: "text-emerald-600 dark:text-emerald-400",
+  },
+  violet: {
+    card: "bg-violet-50/50 border-violet-300 hover:border-violet-500 dark:bg-violet-950/20 dark:border-violet-500/45",
+    orb: "bg-violet-500/15 group-hover:bg-violet-500/25",
+    badge: "bg-gradient-to-br from-violet-600 to-indigo-500",
+    cta: "text-violet-600 dark:text-violet-400",
+  },
+} as const;
+
 function StatCard({
   icon: Icon,
   label,
   value,
+  tone,
   delay = 0,
 }: {
   icon: any;
   label: string;
   value: number;
+  tone: keyof typeof STAT_TONES;
   delay?: number;
 }) {
+  const t = STAT_TONES[tone];
   return (
-    <SpotlightCard className="p-3.5 sm:p-4 animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
+    <SpotlightCard className={`p-3.5 sm:p-4 ${t.card}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{label}</div>
-        <div className="size-7 sm:size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+        <div className={`size-7 sm:size-8 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${t.icon}`}>
           <Icon className="size-3.5 sm:size-4" />
         </div>
       </div>
@@ -189,6 +234,7 @@ function ActionCard({
   title,
   desc,
   cta,
+  tone,
   delay = 0,
 }: {
   to: string;
@@ -196,19 +242,21 @@ function ActionCard({
   title: string;
   desc: string;
   cta: string;
+  tone: keyof typeof ACTION_TONES;
   delay?: number;
 }) {
+  const t = ACTION_TONES[tone];
   return (
     <Link to={to} className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-      <SpotlightCard className="p-4 sm:p-6 h-full animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
-        <div className="absolute -top-16 -right-16 size-40 rounded-full bg-primary/10 blur-2xl group-hover:bg-primary/20 transition-colors duration-300" />
+      <SpotlightCard className={`p-4 sm:p-6 h-full ${t.card}`}>
+        <div className={`absolute -top-16 -right-16 size-40 rounded-full blur-2xl transition-colors duration-300 ${t.orb}`} />
         <div className="relative">
-          <div className="size-9 sm:size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-            <Icon className="size-4 sm:size-5 text-primary-foreground" />
+          <div className={`size-9 sm:size-11 rounded-xl flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 ${t.badge}`}>
+            <Icon className="size-4 sm:size-5 text-white" />
           </div>
           <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold font-display">{title}</h3>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-1.5 leading-relaxed">{desc}</p>
-          <div className="mt-3 sm:mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-primary group-hover:gap-2.5 transition-all duration-300">
+          <div className={`mt-3 sm:mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium group-hover:gap-2.5 transition-all duration-300 ${t.cta}`}>
             {cta} <ArrowRight className="size-3.5 sm:size-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </div>

@@ -15,6 +15,7 @@ import { useData } from "@/lib/data/store";
 import { useInitData } from "@/lib/data/useInit";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { PortalSkeleton } from "@/components/ui/motion";
+import { StudyDoodleBg } from "@/components/ui/study-doodle-bg";
 
 const NAV = [
   { to: "/faculty", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -40,9 +41,12 @@ export function FacultyShell({ children }: { children: ReactNode }) {
   if (!authed) return null;
 
   return (
-    <div className="min-h-screen bg-background bg-mesh flex flex-col">
-      <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-background/75 supports-[backdrop-filter]:bg-background/65">
-        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
+    <div className="relative min-h-screen bg-background bg-mesh flex flex-col">
+      <StudyDoodleBg className="fixed" />
+      <header className="sticky top-0 z-40 pt-3 sm:pt-4">
+        <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-white/15 bg-card shadow-sm">
+            <div className="px-3 sm:px-5 h-14 sm:h-16 flex items-center justify-between gap-3">
           <Link to="/faculty" className="flex items-center gap-2.5 group">
             <div className="size-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105">
               <ShieldCheck className="size-5 text-primary-foreground" />
@@ -113,6 +117,8 @@ export function FacultyShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+          </div>
+        </div>
           </div>
         </div>
       </header>

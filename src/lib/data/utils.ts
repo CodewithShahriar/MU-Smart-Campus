@@ -18,13 +18,15 @@ export function sortBatchesCseFirst(batches: string[]): string[] {
   });
 }
 
-/** Canonical department resolution across the messy CSV inputs. */
+/** Canonical department resolution across CSV inputs. */
 export function resolveDepartment(deptCsv: string, batch: string, course: string): string {
   const b = (batch || "").trim().toUpperCase();
   const d = (deptCsv || "").trim().toUpperCase();
   const c = (course || "").trim().toUpperCase();
 
-  if (/CONTEST|WORKSHOP|ACM/.test(b)) return "Events";
+  if (/CONTEST|WORKSHOP|ACM|WEB PROGRAMMING/.test(b)) return "Events";
+  if (isRecognizedDepartment(d)) return d;
+
   // English department courses (taught across batches)
   if (/^(P\s*)?ENG(\b|-|\s|$)/.test(c)) return "ENG";
 
@@ -56,9 +58,11 @@ export function isRecognizedDepartment(dept: string): boolean {
 }
 
 export function deriveSection(batch: string): string {
-  // Extract letters after digits, e.g. CSE-58A(47) -> "A", CSE-58B+I(45) -> "B+I"
-  const m = batch.match(/\d+([A-Z](?:\+[A-Z])*)/);
-  return m ? m[1] : "-";
+  // Match e.g. CSE-58A(47) -> "A", CSE-58B+I(45) -> "B+I", BBA-61A(39) -> "A", BBA-62(A+B)(64) -> "A+B", BBA-59(AIS)(11) -> "AIS"
+  const paren = batch.match(/\d+\s*\(([A-Z]+(?:\+[A-Z]+)*)\)/);
+  if (paren) return paren[1];
+  const direct = batch.match(/\d+\s*([A-Z](?:\+[A-Z])*)/);
+  return direct ? direct[1] : "-";
 }
 
 export function cleanBatch(batch: string): string {

@@ -4,6 +4,7 @@ import { useData } from "@/lib/data/store";
 import { ShieldCheck, ArrowLeft, Lock, Mail, LogIn, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { SpotlightCard } from "@/components/ui/motion";
+import { StudyDoodleBg } from "@/components/ui/study-doodle-bg";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export const Route = createFileRoute("/faculty/login")({
@@ -46,7 +47,8 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background bg-mesh relative overflow-hidden flex items-center justify-center p-6">
-      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-45 dark:opacity-20 pointer-events-none" />
+      <StudyDoodleBg />
       <div className="absolute -top-[20%] -right-[10%] w-[50vw] h-[50vw] max-w-[40rem] max-h-[40rem] rounded-full bg-primary/10 blur-[140px] animate-blob pointer-events-none" />
       <div className="absolute -bottom-[20%] -left-[10%] w-[50vw] h-[50vw] max-w-[40rem] max-h-[40rem] rounded-full bg-chart-2/10 blur-[140px] animate-blob pointer-events-none" />
 

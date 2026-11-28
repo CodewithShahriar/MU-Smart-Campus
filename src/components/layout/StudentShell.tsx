@@ -1,11 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ReactNode } from "react";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   BarChart3,
   BookOpen,
   CalendarDays,
   DoorOpen,
-  GraduationCap,
   Home,
   ShieldCheck,
 } from "lucide-react";
@@ -13,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { useInitData } from "@/lib/data/useInit";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { PortalSkeleton } from "@/components/ui/motion";
+import { StudyDoodleBg } from "@/components/ui/study-doodle-bg";
 
 const NAV = [
   { to: "/student", label: "Overview", icon: Home, exact: true },
@@ -24,19 +24,66 @@ const NAV = [
 
 export function StudentShell({ children }: { children: ReactNode }) {
   const { loading, error } = useInitData();
+  const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isRouteLoading = useRouterState({ select: (s) => s.isLoading });
+  const [slideEnter, setSlideEnter] = useState(false);
+  const [skipFade, setSkipFade] = useState(false);
+  const initialPathRef = useRef(pathname);
+
+  useEffect(() => {
+    NAV.forEach((n) => {
+      router.preloadRoute({ to: n.to as any }).catch(() => {});
+    });
+  }, [router]);
+
+  useEffect(() => {
+    try {
+      if (document.documentElement.classList.contains("vt-slide-rtl")) {
+        setSkipFade(true);
+      }
+      if (sessionStorage.getItem("mu-portal-enter") === "slide-right") {
+        sessionStorage.removeItem("mu-portal-enter");
+        setSlideEnter(true);
+        setSkipFade(true);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (pathname !== initialPathRef.current) {
+      setSkipFade(false);
+    }
+  }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-background bg-mesh flex flex-col">
-      <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-background/75 supports-[backdrop-filter]:bg-background/65">
-        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="size-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105">
-              <GraduationCap className="size-5 text-primary-foreground" />
-            </div>
-            <div className="leading-tight">
-              <div className="text-sm font-semibold font-display">Student Portal</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">MU Sylhet</div>
+    <div
+      className={cn(
+        "relative min-h-screen bg-background bg-mesh flex flex-col",
+        slideEnter && "animate-slide-in-right",
+      )}
+    >
+      <div
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none fixed top-0 left-0 right-0 z-50 h-0.5 bg-gradient-primary transition-opacity duration-200",
+          isRouteLoading ? "opacity-100 animate-pulse" : "opacity-0",
+        )}
+      />
+      <StudyDoodleBg className="fixed" />
+      <header className="sticky top-0 z-40 pt-3 sm:pt-4">
+        <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-white/15 bg-card shadow-sm">
+            <div className="px-3 sm:px-5 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3">
+          <Link to="/" className="flex items-center gap-2 sm:gap-2.5 group min-w-0">
+            <img
+              src="/brand-logo.png"
+              alt="MU Smart Campus"
+              className="size-10 sm:size-14 object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-105 shrink-0"
+            />
+            <div className="leading-tight min-w-0">
+              <div className="text-xs sm:text-sm font-semibold font-display truncate">Student Portal</div>
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground">MU Sylhet</div>
             </div>
           </Link>
 
@@ -96,6 +143,8 @@ export function StudentShell({ children }: { children: ReactNode }) {
             })}
           </div>
         </div>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1 mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 py-5 sm:py-8">
@@ -106,14 +155,14 @@ export function StudentShell({ children }: { children: ReactNode }) {
           </div>
         )}
         {!loading && !error && (
-          <div key={pathname} className="animate-fade-up">
+          <div key={pathname} className={skipFade ? undefined : "animate-tab-enter"}>
             {children}
           </div>
         )}
       </main>
 
-      <footer className="border-t border-border/60 mt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-xs text-muted-foreground flex flex-wrap justify-between gap-2">
+      <footer className="border-t border-border/60 mt-10 sm:mt-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-6 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-2">
           <div>Metropolitan University, Sylhet · Smart Routine & Room Management</div>
           <div>
             Developed by{" "}

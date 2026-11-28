@@ -66,10 +66,10 @@ function FacultyHome() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Stat icon={DoorOpen} label="Available Rooms Now" value={availableRooms.length} />
-          <Stat icon={Clock} label={`Today (${today})`} value={todayCount} />
-          <Stat icon={Activity} label="Last Updated" value={lastUpdated} />
-          <Stat icon={CalendarPlus} label="Today's Bookings" value={todayBookings} />
+          <Stat icon={DoorOpen} label="Available Rooms Now" value={availableRooms.length} tone="emerald" />
+          <Stat icon={Clock} label={`Today (${today})`} value={todayCount} tone="blue" />
+          <Stat icon={Activity} label="Last Updated" value={lastUpdated} tone="violet" />
+          <Stat icon={CalendarPlus} label="Today's Bookings" value={todayBookings} tone="amber" />
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
@@ -78,18 +78,21 @@ function FacultyHome() {
             icon={CalendarDays}
             title="Central Routine"
             desc="Browse the full central timetable with the same filters students use, side by side with management tools."
+            tone="blue"
           />
           <QuickCard
             to="/faculty/manage"
             icon={ListChecks}
             title="Manage Routine"
             desc="Edit course, faculty, room, day, time slot, department, batch or section — students see changes instantly."
+            tone="violet"
           />
           <QuickCard
             to="/faculty/book"
             icon={CalendarPlus}
             title="Reserve a Classroom"
             desc="Book any available room for a day and time slot. Conflicts are detected automatically."
+            tone="emerald"
           />
         </div>
 
@@ -140,12 +143,59 @@ function FacultyHome() {
   );
 }
 
-function QuickCard({ to, icon: Icon, title, desc }: { to: string; icon: any; title: string; desc: string }) {
+const FACULTY_STAT_TONES = {
+  emerald: {
+    card: "bg-emerald-50/75 border-emerald-300 dark:bg-emerald-950/25 dark:border-emerald-500/45",
+    icon: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
+  blue: {
+    card: "bg-blue-50/75 border-blue-300 dark:bg-blue-950/25 dark:border-blue-500/45",
+    icon: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
+  },
+  violet: {
+    card: "bg-violet-50/75 border-violet-300 dark:bg-violet-950/25 dark:border-violet-500/45",
+    icon: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
+  },
+  amber: {
+    card: "bg-amber-50/75 border-amber-300 dark:bg-amber-950/25 dark:border-amber-500/45",
+    icon: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+} as const;
+
+const FACULTY_QUICK_TONES = {
+  blue: {
+    card: "bg-blue-50/50 border-blue-300 hover:border-blue-500 dark:bg-blue-950/20 dark:border-blue-500/45",
+    badge: "bg-gradient-to-br from-blue-600 to-sky-500",
+  },
+  violet: {
+    card: "bg-violet-50/50 border-violet-300 hover:border-violet-500 dark:bg-violet-950/20 dark:border-violet-500/45",
+    badge: "bg-gradient-to-br from-violet-600 to-indigo-500",
+  },
+  emerald: {
+    card: "bg-emerald-50/50 border-emerald-300 hover:border-emerald-500 dark:bg-emerald-950/20 dark:border-emerald-500/45",
+    badge: "bg-gradient-to-br from-emerald-600 to-teal-500",
+  },
+} as const;
+
+function QuickCard({
+  to,
+  icon: Icon,
+  title,
+  desc,
+  tone,
+}: {
+  to: string;
+  icon: any;
+  title: string;
+  desc: string;
+  tone: keyof typeof FACULTY_QUICK_TONES;
+}) {
+  const t = FACULTY_QUICK_TONES[tone];
   return (
     <Link to={to} className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-      <SpotlightCard className="p-4 sm:p-6 h-full">
-        <div className="size-9 sm:size-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-          <Icon className="size-4 sm:size-5 text-primary-foreground" />
+      <SpotlightCard className={`p-4 sm:p-6 h-full ${t.card}`}>
+        <div className={`size-9 sm:size-11 rounded-xl flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 ${t.badge}`}>
+          <Icon className="size-4 sm:size-5 text-white" />
         </div>
         <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold font-display">{title}</h3>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-1.5 leading-relaxed">{desc}</p>
@@ -154,12 +204,23 @@ function QuickCard({ to, icon: Icon, title, desc }: { to: string; icon: any; tit
   );
 }
 
-function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) {
+function Stat({
+  icon: Icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: any;
+  label: string;
+  value: string | number;
+  tone: keyof typeof FACULTY_STAT_TONES;
+}) {
+  const t = FACULTY_STAT_TONES[tone];
   return (
-    <SpotlightCard className="p-3.5 sm:p-4">
+    <SpotlightCard className={`p-3.5 sm:p-4 ${t.card}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-muted-foreground truncate">{label}</div>
-        <div className="size-7 sm:size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <div className={`size-7 sm:size-8 rounded-lg flex items-center justify-center shrink-0 ${t.icon}`}>
           <Icon className="size-3.5 sm:size-4" />
         </div>
       </div>

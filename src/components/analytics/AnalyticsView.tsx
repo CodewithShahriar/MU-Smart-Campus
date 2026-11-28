@@ -110,7 +110,7 @@ export function AnalyticsView() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <KPI icon={Building2} label="Total Rooms" value={stats.totalRooms} sub={`${stats.roomsInUse} in use`} />
         <KPI
           icon={Activity}
