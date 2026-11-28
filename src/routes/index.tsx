@@ -7,7 +7,6 @@ import {
   DoorOpen,
 } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/motion";
-import { StudyDoodleBg } from "@/components/ui/study-doodle-bg";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useInitData } from "@/lib/data/useInit";
 
@@ -60,22 +59,19 @@ function Landing() {
     <div className="min-h-screen bg-background bg-mesh relative overflow-hidden">
       {/* Blended Metropolitan University campus background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute right-0 top-0 w-full lg:w-[66%] h-[62%] sm:h-[68%]">
+        <div className="absolute right-0 top-0 w-full lg:w-[70%] h-[64%] sm:h-[72%] [mask-image:linear-gradient(to_left,black_45%,transparent_100%)]">
           {/* Previous background kept as /campus-bg.jpg */}
           <img
             src="/campus-bg-alt.jpg"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover object-[65%_45%] opacity-85 dark:opacity-45 contrast-[1.06] saturate-[1.08]"
+            className="w-full h-full object-cover object-[65%_45%] opacity-85 dark:opacity-35 contrast-[1.06] saturate-[1.08] dark:brightness-90 dark:saturate-75 [mask-image:linear-gradient(to_bottom,black_55%,transparent_100%)]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/35 to-transparent dark:from-background dark:via-background/55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
       </div>
-      {/* Subtle minimal dot/grid texture, study doodles & clean ambient washes */}
+      {/* Subtle minimal dot/grid texture & clean ambient washes */}
       <div className="absolute inset-0 bg-dots opacity-65 dark:opacity-30 pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_88%)]" />
       <div className="absolute inset-0 bg-grid opacity-55 dark:opacity-25 pointer-events-none [mask-image:radial-gradient(ellipse_at_top_right,black_25%,transparent_80%)]" />
-      <StudyDoodleBg />
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="hidden dark:block absolute -top-[18%] -right-[8%] w-[55vw] h-[55vw] max-w-[44rem] max-h-[44rem] rounded-full bg-primary/10 blur-[140px] animate-blob" />
         <div
@@ -284,12 +280,14 @@ function Student3DGraphic() {
   return (
     <div className="hidden sm:flex items-center justify-center shrink-0 w-24 h-24 lg:w-28 lg:h-28 relative pointer-events-none select-none transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1">
       <div className="absolute inset-2 rounded-full bg-gradient-to-tr from-blue-500/15 to-sky-400/10 blur-xl" />
-      <img
-        src="/card-student-3d.jpg"
-        alt=""
-        aria-hidden="true"
-        className="relative w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal dark:rounded-2xl [mask-image:radial-gradient(ellipse_at_center,black_62%,transparent_98%)]"
-      />
+      <div className="relative w-full h-full flex items-center justify-center dark:rounded-2xl dark:bg-slate-100/95 dark:p-1.5 dark:shadow-md">
+        <img
+          src="/card-student-3d.jpg"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-contain mix-blend-multiply [mask-image:radial-gradient(ellipse_at_center,black_62%,transparent_98%)] dark:[mask-image:none]"
+        />
+      </div>
     </div>
   );
 }
@@ -298,12 +296,14 @@ function Faculty3DGraphic() {
   return (
     <div className="hidden sm:flex items-center justify-center shrink-0 w-24 h-24 lg:w-28 lg:h-28 relative pointer-events-none select-none transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
       <div className="absolute inset-2 rounded-full bg-gradient-to-tr from-blue-600/15 to-sky-400/10 blur-xl" />
-      <img
-        src="/card-faculty-3d.jpg"
-        alt=""
-        aria-hidden="true"
-        className="relative w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal dark:rounded-2xl [mask-image:radial-gradient(ellipse_at_center,black_62%,transparent_98%)]"
-      />
+      <div className="relative w-full h-full flex items-center justify-center dark:rounded-2xl dark:bg-slate-100/95 dark:p-1.5 dark:shadow-md">
+        <img
+          src="/card-faculty-3d.jpg"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-contain mix-blend-multiply [mask-image:radial-gradient(ellipse_at_center,black_62%,transparent_98%)] dark:[mask-image:none]"
+        />
+      </div>
     </div>
   );
 }

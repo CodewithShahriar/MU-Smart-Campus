@@ -25,9 +25,15 @@
 ## Portal Preview
 
 ### Landing Portal
-Clean entry experience with open-access Student Portal entry, protected Faculty Sign-In, light/dark theme toggle, and smooth right-to-left View Transitions.
+Clean entry experience with a blended Metropolitan University campus backdrop, frosted glass role cards, 3D illustrations, light/dark theme toggle, and smooth right-to-left View Transitions.
 
-![Landing Portal](docs/screenshots/landing-portal.jpg)
+**Light Mode**
+
+![Landing Portal - Light Mode](docs/screenshots/landing-portal.jpg)
+
+**Dark Mode**
+
+![Landing Portal - Dark Mode](docs/screenshots/landing-portal-dark.jpg)
 
 ### Student Dashboard
 Real-time overview of total scheduled classes, courses, departments, active rooms, live running classes for the current slot, and instant navigation to Routine, Rooms, Courses, and Analytics.
