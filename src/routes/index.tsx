@@ -60,13 +60,13 @@ function Landing() {
     <div className="min-h-screen bg-background bg-mesh relative overflow-hidden">
       {/* Blended Metropolitan University campus background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute right-0 top-0 w-full lg:w-[66%] h-[68%] sm:h-[76%]">
+        <div className="absolute right-0 top-0 w-full lg:w-[66%] h-[62%] sm:h-[68%]">
           {/* Previous background kept as /campus-bg.jpg */}
           <img
             src="/campus-bg-alt.jpg"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover object-[center_20%] opacity-85 dark:opacity-45 contrast-[1.06] saturate-[1.08]"
+            className="w-full h-full object-cover object-[65%_45%] opacity-85 dark:opacity-45 contrast-[1.06] saturate-[1.08]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/35 to-transparent dark:from-background dark:via-background/55" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
